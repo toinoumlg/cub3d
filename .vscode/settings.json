@@ -1,0 +1,4 @@
+{
+	"debbuger.cwd": "", // folder of makefile
+	"debbuger.bin": "cub3d" // binnary name
+}
