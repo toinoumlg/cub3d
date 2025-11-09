@@ -13,7 +13,7 @@ SRC_FILES = strlen strlcpy strlcat memcmp atoi \
 		strrchr strnstr strjoin strtrim split \
 		strdup itoa strmapi memset memchr memcpy \
 		bzero memmove calloc putchar_fd putstr_fd \
-		putendl_fd putnbr_fd striteri 
+		putendl_fd putnbr_fd striteri get_next_line
 
 SRC = $(addprefix $(SRC_DIR)/ft_, $(addsuffix .c, $(SRC_FILES)))
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
