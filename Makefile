@@ -1,6 +1,6 @@
 NAME = cub3d
 CC = cc
-CFLAGS = -Werror -Wextra -Wall
+CFLAGS = -Werror -Wextra -Wall -std=gnu89
 
 OBJECTS_DIR = build
 INCLUDE_DIR = include
@@ -8,14 +8,15 @@ MLX_DIR = mlx
 LIBFT_DIR = libft
 
 SOURCE_DIR = source
-SOURCES_MAIN = main
+SOURCES_MAIN = main utils init object object_texture draw timer \
+	process_mesh vector_utils matrix_utils png_to_img clipping draw_texture
 
 SOURCES = $(addprefix $(SOURCE_DIR)/, $(addsuffix .c, $(SOURCES_MAIN))) 
 OBJECTS = $(SOURCES:$(SOURCE_DIR)/%.c=$(OBJECTS_DIR)/%.o)
 INCLUDES = -I/usr/include -I./mlx -I./libft/include -I./include
 MLX_LIB = $(MLX_DIR)/libmlx_Linux.a
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
-LIBS = -Lmlx -lmlx -L/usr/lib/X11 -lXext -lX11 -lm $(LIBFT_LIB)
+LIBS = -Lmlx -lmlx -L/usr/lib/X11 -lXext -lX11 -lpng -lm $(LIBFT_LIB)
 DEP = $(OBJECTS:.o=.d)
 
 all: $(MLX_LIB) $(LIBFT_LIB) $(OBJECTS_DIR) $(NAME)
