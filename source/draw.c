@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:56:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 20:49:42 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:28:56 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	pxl_put(t_cub3d *data, int x, int y, int color, float z)
 {
 	char	*pxl;
 
-	if (z > data->z_buffer[y][x])
-		return ;
+	// if (z > data->z_buffer[y][x])
+	// 	return ;
 	data->z_buffer[y][x] = z;
 	pxl = data->image.addr + (y * data->image.lenght + x * (data->image.bpp
 				/ 8));

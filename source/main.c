@@ -6,13 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 07:57:59 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 21:39:56 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:40:11 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include "mem.h"
 #include <X11/keysym.h>
+#include <stdio.h>
 
 int	handle_keys(int key_stroked, t_cub3d *data)
 {
@@ -56,7 +57,7 @@ void	clear_image(t_cub3d *data)
 	{
 		x = 0;
 		while (x < WINDOW_WIDTH)
-			pxl_put(data, x++, y, 0, __FLT_MAX__);
+			pxl_put(data, x++, y, 5555555, __FLT_MAX__);
 		y++;
 	}
 }
@@ -76,16 +77,17 @@ void	clear_z_buffer(float **z_buffer)
 	}
 }
 
-// void	fps_counter(double dt)
-// {
-// 	printf("%i fps\n", (int)(1 / dt));
-// }
+void	fps_counter(double dt)
+{
+	printf("%i fps\n", (int)(1 / dt));
+}
 
 int	update(t_cub3d *data)
 {
 	get_current_time(data);
 	clear_image(data);
 	clear_z_buffer(data->z_buffer);
+	fps_counter(data->timer.delta_time);
 	process_mesh(data);
 	mlx_put_image_to_window(data->mlx, data->window, data->image.ptr, 0, 0);
 	return (0);
@@ -126,8 +128,8 @@ int	main(void)
 	t_cub3d data;
 	ft_memset(&data, 0, sizeof(t_cub3d));
 	set_mlx(&data);
-	// data.object = load_obj_with_texture("cube.obj", "cube.png", data.mlx);
-	data.object = load_obj("Tree1.obj");
+	data.object = load_obj_with_texture("cube.obj", "cube.png", data.mlx);
+	// data.object = load_obj("sphere.obj");
 	start_loop(&data);
 	free_cub3d(&data);
 	return (0);

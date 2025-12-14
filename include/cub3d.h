@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 21:24:26 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/11/10 14:57:52 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ typedef struct s_vector3
 	float					x;
 	float					y;
 	float					z;
-	float					w;
 }							t_vector3;
 
 typedef struct s_vector2
@@ -79,7 +78,6 @@ typedef struct s_triangle
 {
 	t_vector3				p[3];
 	t_vector2				t[3];
-	int						color;
 	struct s_triangle		*next;
 }							t_triangle;
 

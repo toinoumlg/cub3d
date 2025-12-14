@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 13:52:47 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 21:40:12 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:40:00 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,11 +343,9 @@ void	process_mesh(t_cub3d *data)
 		camera_ray = vector_sub(tri_transformed.p[0], data->camera);
 		if (vector_dot_product(normal, camera_ray) < 0.0f)
 		{
-			light_direction = set_vector3(0.0f, 0.0f, -1.0f);
-			light_direction = vector_normalize(light_direction);
+			light_direction = vector_normalize(set_vector3(0.0f, 0.0f, -1.0f));
 			dp = vector_dot_product(light_direction, normal);
 			tri_view = matrix_multiply_triangle(view, tri_transformed);
-			tri_view.color = mesh->color;
 			n_clipped_triangle = 0;
 			n_clipped_triangle = triange_clipping_against_plane(set_vector3(0,
 						0, 0.1f), set_vector3(0, 0, 1.0f), tri_view,
@@ -411,25 +409,23 @@ void	process_mesh(t_cub3d *data)
 		while (clipped_against_screen_edge)
 		{
 			next2 = clipped_against_screen_edge->next;
-			draw_filled_triangle_to_image(*clipped_against_screen_edge, data,
-				clipped_against_screen_edge->color);
+			// draw_filled_triangle_to_image(*clipped_against_screen_edge, data,
+			// 	0);
 			// draw_triangle_to_image(*clipped_against_screen_edge, data,
-			// 	create_trgb(0, 255, 255, 255));
+			// 	__INT_MAX__);
 			draw_texture(clipped_against_screen_edge->p[0].x,
-							clipped_against_screen_edge->p[0].y,
-							clipped_against_screen_edge->t[0].u,
-							clipped_against_screen_edge->t[0].v,
-							clipped_against_screen_edge->p[1].x,
-							clipped_against_screen_edge->p[1].y,
-							clipped_against_screen_edge->t[1].u,
-							clipped_against_screen_edge->t[1].v,
-							clipped_against_screen_edge->p[2].x,
-							clipped_against_screen_edge->p[2].y,
-							clipped_against_screen_edge->t[2].u,
-							clipped_against_screen_edge->t[2].v,
-							&data->object.texture,
-							data,
-							clipped_against_screen_edge->p[0].z);
+				clipped_against_screen_edge->p[0].y,
+				clipped_against_screen_edge->t[0].u,
+				clipped_against_screen_edge->t[0].v,
+				clipped_against_screen_edge->p[1].x,
+				clipped_against_screen_edge->p[1].y,
+				clipped_against_screen_edge->t[1].u,
+				clipped_against_screen_edge->t[1].v,
+				clipped_against_screen_edge->p[2].x,
+				clipped_against_screen_edge->p[2].y,
+				clipped_against_screen_edge->t[2].u,
+				clipped_against_screen_edge->t[2].v, &data->object.texture,
+				data, clipped_against_screen_edge->p[0].z);
 			free(clipped_against_screen_edge);
 			clipped_against_screen_edge = next2;
 		}
