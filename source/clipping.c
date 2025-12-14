@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:50:18 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 20:55:23 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/11/10 15:34:44 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ int	triange_clipping_against_plane(t_vector3 plane_p, t_vector3 plane_n,
 			+ inside_texture[0]->u;
 		out_try1->t[2].v = t * (outside_texture[1]->v - inside_texture[0]->v)
 			+ inside_texture[0]->v;
-		out_try1->color = create_trgb(0, 125, 125, 255);
 		return (1);
 	}
 	else if (n_inside_points == 2 && n_outside_points == 1)
@@ -129,7 +128,6 @@ int	triange_clipping_against_plane(t_vector3 plane_p, t_vector3 plane_n,
 			+ inside_texture[0]->u;
 		out_try1->t[2].v = t * (outside_texture[0]->v - inside_texture[0]->v)
 			+ inside_texture[0]->v;
-		out_try1->color = create_trgb(0, 125, 255, 125);
 		out_try2->p[0] = *inside_points[1];
 		out_try2->t[0] = *inside_texture[1];
 		out_try2->p[1] = out_try1->p[2];
@@ -138,9 +136,8 @@ int	triange_clipping_against_plane(t_vector3 plane_p, t_vector3 plane_n,
 				*inside_points[1], *outside_points[0], &t);
 		out_try2->t[2].u = t * (outside_texture[0]->u - inside_texture[1]->u)
 			+ inside_texture[1]->u;
-		out_try1->t[2].v = t * (outside_texture[0]->v - inside_texture[1]->v)
+		out_try2->t[2].v = t * (outside_texture[0]->v - inside_texture[1]->v)
 			+ inside_texture[1]->v;
-		out_try2->color = create_trgb(0, 255, 0, 255);
 		return (2);
 	}
 	return (-1);

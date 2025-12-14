@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:46:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 20:56:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:40:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "swap.h"
 #include <fcntl.h>
 #include <stdio.h>
-
 
 void	add_new_uv(t_list_vector2 **uvs, t_list_vector2 *new_uv)
 {
@@ -81,7 +80,6 @@ void	add_triangle_with_t(t_list_vector3 *verts, t_list_vector2 *uvs,
 	new_tri->t[2] = get_uv(uvs, f[5]);
 	add_new_triangle(mesh, new_tri);
 }
-
 
 t_obj	load_obj_with_texture(char *object_name, char *texture_name, void *mlx)
 {

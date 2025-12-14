@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:46:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 21:41:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/11/10 14:57:56 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,6 @@ void	add_triangle(t_list_vector3 *verts, t_triangle **mesh, char *gnl)
 	new_tri->p[0] = get_vector(verts, f[0]);
 	new_tri->p[1] = get_vector(verts, f[1]);
 	new_tri->p[2] = get_vector(verts, f[2]);
-	new_tri->color = create_trgb(0, 255, 0, 0);
 	add_new_triangle(mesh, new_tri);
 }
 

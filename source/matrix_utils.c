@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 21:59:55 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 21:10:26 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/11/10 15:30:31 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 t_vector3	matrix_multiply_vector(t_mat4x4 m, t_vector3 in)
 {
 	t_vector3	out;
+	float		w;
 
 	ft_memset(&out, 0, sizeof(t_vector3));
 	out.x = in.x * m.mat[0][0] + in.y * m.mat[1][0] + in.z * m.mat[2][0]
@@ -24,10 +25,10 @@ t_vector3	matrix_multiply_vector(t_mat4x4 m, t_vector3 in)
 		+ m.mat[3][1];
 	out.z = in.x * m.mat[0][2] + in.y * m.mat[1][2] + in.z * m.mat[2][2]
 		+ m.mat[3][2];
-	out.w = in.x * m.mat[0][3] + in.y * m.mat[1][3] + in.z * m.mat[2][3]
+	w = in.x * m.mat[0][3] + in.y * m.mat[1][3] + in.z * m.mat[2][3]
 		+ m.mat[3][3];
-	if (out.w != 0.0f)
-		out = vector_div(out, out.w);
+	if (w != 0.0f)
+		out = vector_div(out, w);
 	return (out);
 }
 
@@ -42,7 +43,6 @@ t_triangle	matrix_multiply_triangle(t_mat4x4 m, t_triangle in)
 	out.t[0] = in.t[0];
 	out.t[1] = in.t[1];
 	out.t[2] = in.t[2];
-	out.color = in.color;
 	return (out);
 }
 
@@ -123,7 +123,7 @@ t_mat4x4	matrix_make_projection(void)
 
 	ft_memset(&matrix, 0, sizeof(t_mat4x4));
 	fov_rad = 1.0f / tanf(FFOV * 0.5f / 180.0f * 3.14159f);
-	aspect_ratio = WINDOW_HEIGHT / WINDOW_WIDTH;
+	aspect_ratio = (float)WINDOW_HEIGHT / (float)WINDOW_WIDTH;
 	matrix.mat[0][0] = aspect_ratio * fov_rad;
 	matrix.mat[1][1] = fov_rad;
 	matrix.mat[2][2] = FFAR / (FFAR - FNEAR);

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 20:05:33 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 21:25:01 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:40:33 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	get_color(float u, float v, t_img *texture)
 	int	x;
 	int	y;
 
+	v = 1.0f - v;
 	x = (int)(u * texture->w);
 	y = (int)(v * texture->h);
 	if (x < 0 || x >= texture->w || y < 0 || y >= texture->h)
@@ -119,7 +120,6 @@ void	draw_texture(int x1, int y1, float u1, float v1, int x2, int y2,
 				j++;
 				t += t_step;
 			}
-
 			i++;
 		}
 	}
