@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 12:56:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 21:01:33 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/12/15 13:44:46 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define BITES_TO_READ 8
-
-void	set_color(int x, int y, int color, t_img *texture)
+void	set_color(int x, int y, int color, t_img *img)
 {
 	char	*pxl;
 
-	pxl = texture->addr + (y * texture->lenght + x * (texture->bpp / 8));
+	pxl = img->addr + (y * img->lenght + x * (img->bpp / 8));
 	*(unsigned int *)pxl = color;
 }
 
@@ -102,15 +100,14 @@ void	free_png(t_png png)
 }
 
 // from https://gist.github.com/jeroen/10eb17a9fb0e5799b772
-void	png_to_img(char *file_name, t_img *texture, void *mlx)
+t_img	png_to_img(char *file_name, void *mlx)
 {
 	int		y;
 	t_png	png;
 	FILE	*fp;
+	t_img	img;
 
 	fp = init_png(file_name, &png);
-	if (!fp)
-		return ;
 	set_png_info(&png);
 	png.rows = malloc(sizeof(png_byte *) * png.height);
 	y = 0;
@@ -118,11 +115,11 @@ void	png_to_img(char *file_name, t_img *texture, void *mlx)
 		png.rows[y++] = malloc(png_get_rowbytes(png.p, png.info));
 	png_read_image(png.p, png.rows);
 	fclose(fp);
-	texture->ptr = mlx_new_image(mlx, png.width, png.height);
-	texture->w = png.width;
-	texture->h = png.height;
-	texture->addr = mlx_get_data_addr(texture->ptr, &texture->bpp,
-			&texture->lenght, &texture->end);
-	copy_png_to_img(&png, texture);
+	img.ptr = mlx_new_image(mlx, png.width, png.height);
+	img.w = png.width;
+	img.h = png.height;
+	img.addr = mlx_get_data_addr(img.ptr, &img.bpp, &img.lenght, &img.end);
+	copy_png_to_img(&png, &img);
 	free_png(png);
+	return (img);
 }

@@ -6,13 +6,16 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 15:23:52 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 16:16:24 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/12/15 14:31:33 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PNG_TO_IMG
 # define PNG_TO_IMG
 # include <png.h>
+# define BITES_TO_READ 8
+
+# include "cub3d.h"
 
 typedef struct s_png
 {
@@ -27,6 +30,6 @@ typedef struct s_png
 	int			y;
 }				t_png;
 
-void			png_to_img(char *file_name, t_img *texture, void *mlx);
+t_img			png_to_img(char *file_name, void *mlx);
 
 #endif
