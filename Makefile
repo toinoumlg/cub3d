@@ -8,8 +8,7 @@ MLX_DIR = mlx
 LIBFT_DIR = libft
 
 SOURCE_DIR = source
-SOURCES_MAIN = main utils init object object_texture draw timer \
-	process_mesh vector_utils matrix_utils png_to_img clipping draw_texture
+SOURCES_MAIN = main utils init draw timer png_to_img raycast movement
 
 SOURCES = $(addprefix $(SOURCE_DIR)/, $(addsuffix .c, $(SOURCES_MAIN))) 
 OBJECTS = $(SOURCES:$(SOURCE_DIR)/%.c=$(OBJECTS_DIR)/%.o)

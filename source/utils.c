@@ -6,50 +6,40 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:31:34 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 16:32:00 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/12/15 14:20:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-t_vector3	set_vector3(float x, float y, float z)
+int	is_walkable(int **map, t_double2 map_size, int x, int y)
 {
-	t_vector3	new_v;
-
-	new_v.x = x;
-	new_v.y = y;
-	new_v.z = z;
-	return (new_v);
+	if (x < 0 || y < 0 || x >= (int)map_size.x || y >= (int)map_size.y)
+		return (0);
+	return (map[y][x] == 0);
 }
 
-float	ft_atof(const char *str)
+double	ft_abs(double nb)
 {
-	int i;
-	int sign;
-	float result;
-	float place;
+	if (nb < 0)
+		return (-nb);
+	return (nb);
+}
 
-	i = 0;
-	sign = 1;
-	result = 0.0f;
-	place = 0.1f;
-	while (str[i] && str[i] == ' ')
-		i++;
-	if (str[i] == '-')
-	{
-		sign = -1;
-		i++;
-	}
-	while (str[i] && str[i] != ' ' && str[i] >= '0' && str[i] <= '9')
-		result = result * 10.0f + (str[i++] - '0');
-	if (str[i] == '.')
-	{
-		i++;
-		while (str[i] && str[i] != ' ' && str[i] >= '0' && str[i] <= '9')
-		{
-			result += (str[i++] - '0') * place;
-			place *= 0.1f;
-		}
-	}
-	return (result * sign);
+t_double2	set_double2(float x, float y)
+{
+	t_double2	new_double2;
+
+	new_double2.x = x;
+	new_double2.y = y;
+	return (new_double2);
+}
+
+t_vector2	set_vector2(int x, int y)
+{
+	t_vector2	new_vector2;
+
+	new_vector2.x = x;
+	new_vector2.y = y;
+	return (new_vector2);
 }
