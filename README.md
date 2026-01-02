@@ -3,3 +3,5 @@ https://www.gabrielgambetta.com/computer-graphics-from-scratch/07-filled-triangl
 https://harm-smits.github.io/42docs/libs/minilibx/colors.html
 https://haqr.eu/tinyrenderer/bresenham/
 https://github.com/garykac/3d-cubes
+https://www.youtube.com/watch?v=EZufiIwwqFA
+https://www.youtube.com/watch?v=qjWkNZ0SXfo
