@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:46:30 by amalangu          #+#    #+#             */
-/*   Updated: 2025/12/15 14:28:37 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/11 09:00:27 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,13 @@ void	init_fake_map(char *file_name, t_cub3d *data)
 	}
 }
 
+void	init_menu(t_menu *menu)
+{
+	menu->start.pos = set_int2(WINDOW_WIDTH / 2 - WINDOW_WIDTH / 100,
+			WINDOW_HEIGHT / 2 - WINDOW_HEIGHT / 100);
+	menu->start.size = set_int2(200, 20);
+}
+
 void	init_data(t_cub3d *data)
 {
 	set_timer(data);
@@ -97,8 +104,10 @@ void	init_data(t_cub3d *data)
 	data->window = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT,
 			WINDOW_NAME);
 	data->buffer = new_image(data->mlx);
+	data->menu.img = new_image(data->mlx);
 	data->plane = set_double2(0.0, 0.66);
 	data->player.pos = set_double2(22.0, 12.0);
 	data->player.dir = set_double2(-1.1, 0.0);
 	init_fake_map("map.txt", data);
+	init_menu(&data->menu);
 }

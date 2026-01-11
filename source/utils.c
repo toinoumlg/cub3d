@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:31:34 by amalangu          #+#    #+#             */
-/*   Updated: 2025/12/15 14:20:50 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/09 18:49:10 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ t_double2	set_double2(float x, float y)
 	return (new_double2);
 }
 
-t_vector2	set_vector2(int x, int y)
+t_int2	set_int2(int x, int y)
 {
-	t_vector2	new_vector2;
+	t_int2	new_int2;
 
-	new_vector2.x = x;
-	new_vector2.y = y;
-	return (new_vector2);
+	new_int2.x = x;
+	new_int2.y = y;
+	return (new_int2);
 }

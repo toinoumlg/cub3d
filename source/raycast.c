@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 09:26:38 by amalangu          #+#    #+#             */
-/*   Updated: 2025/12/15 13:18:53 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/09 12:09:30 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,10 @@ void	init_raycast(t_raycaster *rc, t_cub3d *data)
 	rc->d_dist.y = ft_abs(1 / rc->ray_dir.y);
 }
 
-t_vector2	set_draw_limit(t_raycaster rc)
+t_int2	set_draw_limit(t_raycaster rc)
 {
-	int			line_height;
-	t_vector2	draw_limit;
+	int		line_height;
+	t_int2	draw_limit;
 
 	line_height = (int)(WINDOW_HEIGHT / rc.perp_dist);
 	draw_limit.x = -line_height / 2 + (int)WINDOW_HEIGHT / 2;
@@ -115,7 +115,7 @@ t_vector2	set_draw_limit(t_raycaster rc)
 void	raycast(t_cub3d *data)
 {
 	t_raycaster	rc;
-	t_vector2	draw_limit;
+	t_int2		draw_limit;
 	int			color;
 
 	rc.x = 0;

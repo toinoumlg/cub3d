@@ -6,16 +6,17 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-/*   Updated: 2025/12/15 14:28:01 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/09 18:49:37 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# include "menu.h"
 # include "mlx.h"
+# include "utils.h"
 # include <math.h>
-# include <sys/time.h>
 
 # ifndef CONFIG
 #  define CONFIG
@@ -29,56 +30,19 @@
 #  define ROTATION 0.1
 # endif
 
-typedef struct s_double2
-{
-	double			x;
-	double			y;
-}					t_double2;
-
-typedef struct s_vector2
-{
-	int				x;
-	int				y;
-}					t_vector2;
-
-typedef struct s_timer
-{
-	struct timeval	last_frame;
-	struct timeval	current_time;
-	double			time;
-	double			delta_time;
-}					t_timer;
-
-typedef struct s_img
-{
-	void			*ptr;
-	char			*addr;
-	int				bpp;
-	int				lenght;
-	int				w;
-	int				h;
-	int				end;
-}					t_img;
-
 typedef struct s_player
 {
 	t_double2		pos;
 	t_double2		dir;
 }					t_player;
 
-typedef struct s_raycaster
+typedef enum e_game_state
 {
-	t_double2		ray_dir;
-	t_double2		camera;
-	t_double2		d_dist;
-	t_double2		s_dist;
-	t_vector2		map_pos;
-	t_vector2		step;
-	int				x;
-	int				side;
-	int				hit;
-	double			perp_dist;
-}					t_raycaster;
+	main_menu,
+	playing,
+	dead,
+	win
+}					t_game_state;
 
 typedef struct s_cub3d
 {
@@ -89,25 +53,27 @@ typedef struct s_cub3d
 	void			*window;
 	int				floor;
 	int				ceiling;
+	t_menu			menu;
 	t_img			textures[4];
 	t_img			buffer;
 	t_timer			timer;
 	t_double2		plane;
 	t_player		player;
+	t_game_state	state;
 }					t_cub3d;
 
 void				init_data(t_cub3d *data);
+void				menu(t_cub3d *data);
 void				get_current_time(t_cub3d *data);
 void				set_timer(t_cub3d *data);
 int					create_trgb(unsigned char t, unsigned char r,
 						unsigned char g, unsigned char b);
-void				pxl_put(t_cub3d *data, int x, int y, int color);
+void				pxl_put(t_img img, int x, int y, int color);
 void				raycast(t_cub3d *data);
-double				ft_abs(double nb);
-t_double2			set_double2(float x, float y);
-void				draw_vert_line(int x, t_vector2 draw_limit, int color,
+
+void				draw_vert_line(int x, t_int2 draw_limit, int color,
 						t_cub3d *data);
 int					is_walkable(int **map, t_double2 map_size, int x, int y);
-void				clear_image(t_cub3d *data);
+void				clear_buffer(t_cub3d *data);
 
 #endif
