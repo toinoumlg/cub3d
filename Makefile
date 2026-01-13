@@ -8,7 +8,13 @@ MLX_DIR = mlx
 LIBFT_DIR = libft
 
 SOURCE_DIR = source
-SOURCES_MAIN = main utils init draw timer png_to_img raycast movement
+SOURCES_MAIN = main \
+	utils/utils utils/free utils/timer \
+	graphic/raycast graphic/draw graphic/utils \
+	logic/movement  logic/loop \
+	config/flood_fill config/map config/init \
+	config/texture config/parsing config/utils \
+	config/alloc
 
 SOURCES = $(addprefix $(SOURCE_DIR)/, $(addsuffix .c, $(SOURCES_MAIN))) 
 OBJECTS = $(SOURCES:$(SOURCE_DIR)/%.c=$(OBJECTS_DIR)/%.o)

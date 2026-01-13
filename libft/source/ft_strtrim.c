@@ -6,48 +6,24 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:10:37 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/08 17:54:40 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/12 12:54:46 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "str.h"
 
-int	start_f(const char *s1, const char *set)
+static int	ft_char_in_set(char c, char const *set)
 {
-	int	i;
-	int	j;
-
-	j = 0;
-	i = 0;
-	while (set[i])
-	{
-		if (s1[j] == set[i])
-		{
-			j++;
-			i = 0;
-		}
-		else
-			i++;
-	}
-	return (j);
-}
-
-int	end_f(const char *s1, const char *set, int lenght)
-{
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (set[i])
 	{
-		if (s1[lenght - 1] == set[i])
-		{
-			lenght--;
-			i = 0;
-		}
-		else
-			i++;
+		if (set[i] == c)
+			return (1);
+		i++;
 	}
-	return (lenght);
+	return (0);
 }
 
 // Allocates and returns a copy of ’s1’
@@ -55,29 +31,23 @@ int	end_f(const char *s1, const char *set, int lenght)
 // From the beginning and the end of the string
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	int		lenght;
-	int		start;
-	int		end;
-	char	*result;
-	int		i;
+	char *str;
+	size_t i;
+	size_t start;
+	size_t end;
 
-	if (!s1 || !set)
-		return (NULL);
-	lenght = ft_strlen(s1);
-	start = start_f(s1, set);
-	end = end_f(s1, set, lenght);
-	if (start != lenght)
-		result = malloc(sizeof(char) * end - start + 1);
-	else
-		result = malloc(sizeof(char) * 1);
-	if (!result)
+	start = 0;
+	while (s1[start] && ft_char_in_set(s1[start], set))
+		start++;
+	end = ft_strlen(s1);
+	while (end > start && ft_char_in_set(s1[end - 1], set))
+		end--;
+	str = (char *)malloc(sizeof(*s1) * (end - start + 1));
+	if (!str)
 		return (NULL);
 	i = 0;
-	while (i < end - start)
-	{
-		result[i] = s1[start + i];
-		i++;
-	}
-	result[i] = 0;
-	return (result);
+	while (start < end)
+		str[i++] = s1[start++];
+	str[i] = 0;
+	return (str);
 }

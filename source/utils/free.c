@@ -1,0 +1,76 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/12 13:43:50 by amalangu          #+#    #+#             */
+/*   Updated: 2026/01/13 17:56:03 by amalangu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "put.h"
+#include "struct.h"
+#include <stdlib.h>
+#include <unistd.h>
+
+void	free_config(char **array)
+{
+	int	i;
+
+	i = 0;
+	if (!array)
+		return ;
+	while (array[i])
+		free(array[i++]);
+	free(array);
+}
+
+static void	free_map(int **map, int y)
+{
+	int	i;
+
+	i = 0;
+	if (!map)
+		return ;
+	while (i < y)
+		free(map[i++]);
+	free(map);
+}
+
+static void	ft_close(int *fd)
+{
+	if (*fd)
+		close(*fd);
+}
+
+static void	free_mlx(t_cub3d *data)
+{
+	if (data->buffer.ptr)
+		mlx_destroy_image(data->mlx, data->buffer.ptr);
+	if (data->textures[0].ptr)
+		mlx_destroy_image(data->mlx, data->textures[0].ptr);
+	if (data->textures[1].ptr)
+		mlx_destroy_image(data->mlx, data->textures[1].ptr);
+	if (data->textures[2].ptr)
+		mlx_destroy_image(data->mlx, data->textures[2].ptr);
+	if (data->textures[3].ptr)
+		mlx_destroy_image(data->mlx, data->textures[3].ptr);
+	if (data->window)
+		mlx_destroy_window(data->mlx, data->window);
+	if (data->mlx)
+	{
+		mlx_destroy_display(data->mlx);
+		free(data->mlx);
+	}
+}
+
+int	free_cub3d(t_cub3d *data)
+{
+	free_mlx(data);
+	free_map(data->map, data->map_size.y);
+	free_config(data->config);
+	ft_close(&data->fd);
+	return (1);
+}

@@ -6,17 +6,22 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:31:34 by amalangu          #+#    #+#             */
-/*   Updated: 2025/12/15 14:20:50 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/13 17:32:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "cub_utils.h"
+#include "put.h"
+#include <stdlib.h>
 
-int	is_walkable(int **map, t_double2 map_size, int x, int y)
+void	exit_error(char *error, t_cub3d *data)
 {
-	if (x < 0 || y < 0 || x >= (int)map_size.x || y >= (int)map_size.y)
-		return (0);
-	return (map[y][x] == 0);
+	ft_putstr_fd("Error\n", 2);
+	ft_putstr_fd(error, 2);
+	ft_putstr_fd("\n", 2);
+	if (data)
+		free_cub3d(data);
+	exit(1);
 }
 
 double	ft_abs(double nb)
