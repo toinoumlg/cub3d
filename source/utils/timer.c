@@ -6,12 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 13:21:08 by amalangu          #+#    #+#             */
-/*   Updated: 2025/12/15 13:17:33 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/13 17:33:17 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
 #include "mem.h"
+#include "struct.h"
 
 void	set_timer(t_cub3d *data)
 {

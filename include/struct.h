@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   struct.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-/*   Updated: 2025/12/15 14:28:01 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/13 17:29:04 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
+#ifndef STRUCT_H
+# define STRUCT_H
 
 # include "mlx.h"
 # include <math.h>
 # include <sys/time.h>
 
 # ifndef CONFIG
-#  define CONFIG
-
 #  define WINDOW_WIDTH 1280.0f
 #  define WINDOW_HEIGHT 720.0f
 #  define FPS 30.0f
@@ -72,20 +70,25 @@ typedef struct s_raycaster
 	t_double2		camera;
 	t_double2		d_dist;
 	t_double2		s_dist;
+	t_double2		texture;
+	t_vector2		draw_limit;
 	t_vector2		map_pos;
 	t_vector2		step;
 	int				x;
 	int				side;
-	int				hit;
+	int				line_height;
 	double			perp_dist;
+	double			wall_x;
+	double			texture_step;
 }					t_raycaster;
 
 typedef struct s_cub3d
 {
-	int				frames;
+	int				fd;
 	void			*mlx;
 	int				**map;
-	t_double2		map_size;
+	char			**config;
+	t_vector2		map_size;
 	void			*window;
 	int				floor;
 	int				ceiling;
@@ -95,19 +98,5 @@ typedef struct s_cub3d
 	t_double2		plane;
 	t_player		player;
 }					t_cub3d;
-
-void				init_data(t_cub3d *data);
-void				get_current_time(t_cub3d *data);
-void				set_timer(t_cub3d *data);
-int					create_trgb(unsigned char t, unsigned char r,
-						unsigned char g, unsigned char b);
-void				pxl_put(t_cub3d *data, int x, int y, int color);
-void				raycast(t_cub3d *data);
-double				ft_abs(double nb);
-t_double2			set_double2(float x, float y);
-void				draw_vert_line(int x, t_vector2 draw_limit, int color,
-						t_cub3d *data);
-int					is_walkable(int **map, t_double2 map_size, int x, int y);
-void				clear_image(t_cub3d *data);
 
 #endif

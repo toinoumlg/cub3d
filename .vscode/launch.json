@@ -6,7 +6,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/${config:debbuger.cwd}/${config:debbuger.bin}",
-      "args": [],
+      "args": ["config.cub"],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/${config:debbuger.cwd}",
       "environment": [],
