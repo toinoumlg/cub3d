@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/14 09:41:35 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/16 12:09:44 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/16 13:46:46 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,16 @@ void	*draw_routine(void *args)
 
 	while (1)
 	{
-		pthread_mutex_lock(&drawer->data->th_data.mutex);
-		while (drawer->data->th_data.draw_finished)
-			pthread_cond_wait(&drawer->data->th_data.cond,
-				&drawer->data->th_data.mutex);
-		pthread_mutex_unlock(&drawer->data->th_data.mutex);
 		clear_image_split(drawer);
 		raycast_thread(drawer);
 		pthread_mutex_lock(&drawer->data->th_data.mutex);
 		drawer->data->th_data.draw_finished++;
 		pthread_mutex_unlock(&drawer->data->th_data.mutex);
-		pthread_cond_signal(&drawer->data->th_data.cond);
+		pthread_cond_broadcast(&drawer->data->th_data.cond);
+		pthread_mutex_lock(&drawer->data->th_data.mutex);
+		while (drawer->data->th_data.draw_finished != 0)
+			pthread_cond_wait(&drawer->data->th_data.cond,
+				&drawer->data->th_data.mutex);
+		pthread_mutex_unlock(&drawer->data->th_data.mutex);
 	}
 }
