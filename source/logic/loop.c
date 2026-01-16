@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 13:49:19 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:56:56 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/16 12:11:22 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,16 @@ static void	fps_counter(t_cub3d *data)
 static int	update(t_cub3d *data)
 {
 	get_current_time(data);
-	clear_image(data);
-	raycast(data);
-	fps_counter(data);
+	pthread_mutex_lock(&data->th_data.mutex);
+	while (data->th_data.draw_finished != THREAD_COUNT)
+		pthread_cond_wait(&data->th_data.cond, &data->th_data.mutex);
+	pthread_mutex_unlock(&data->th_data.mutex);
 	mlx_put_image_to_window(data->mlx, data->window, data->buffer.ptr, 0, 0);
 	fps_counter(data);
+	pthread_mutex_lock(&data->th_data.mutex);
+	data->th_data.draw_finished = 0;
+	pthread_mutex_unlock(&data->th_data.mutex);
+	pthread_cond_broadcast(&data->th_data.cond);
 	return (0);
 }
 

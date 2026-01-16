@@ -11,6 +11,7 @@ SOURCE_DIR = source
 SOURCES_MAIN = main \
 	utils/utils utils/free utils/timer \
 	graphic/raycast graphic/draw graphic/utils \
+	graphic/routine graphic/raycast_thread \
 	logic/movement  logic/loop \
 	config/flood_fill config/map config/init \
 	config/texture config/parsing config/utils \

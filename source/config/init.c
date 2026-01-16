@@ -6,12 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:46:30 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:35:41 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/16 12:08:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "config.h"
 #include "cub_utils.h"
+#include "graphic.h"
 #include "mem.h"
 #include "str.h"
 
@@ -48,16 +49,43 @@ void	init_mlx(t_cub3d *data)
 		exit_error("Getting buffer image address", data);
 }
 
-void	init_cub3d(t_cub3d *data, int ac, char **av)
+void	start_drawer_threads(t_drawer *drawer, t_cub3d *data)
+{
+	int	i;
+	int	width_size;
+
+	i = 0;
+	width_size = WINDOW_WIDTH / THREAD_COUNT;
+	while (i < THREAD_COUNT)
+	{
+		drawer[i].thread_limit = set_vector2(i * width_size, (i + 1)
+				* width_size);
+		drawer[i].data = data;
+		i++;
+	}
+	i = 0;
+	while (i < THREAD_COUNT)
+	{
+		if (pthread_create(&drawer[i].thread, NULL, draw_routine, &drawer[i]))
+			return (exit_error("Failed to initialize a thread", drawer->data));
+		i++;
+	}
+}
+
+void	init_cub3d(t_cub3d *data, int ac, char *file)
 {
 	int	size;
 
+	ft_memset(data, 0, sizeof(t_cub3d));
 	if (ac != 2)
 		exit_error("No config file provided", data);
-	size = try_open(av[1]);
-	ft_memset(data, 0, sizeof(t_cub3d));
+	size = try_open(file);
 	init_mlx(data);
-	copy_config(size, av[1], data);
+	copy_config(size, file, data);
 	parse_config(data);
 	set_timer(data);
+	data->th_data.draw_finished = 1;
+	pthread_mutex_init(&data->th_data.mutex, NULL);
+	pthread_cond_init(&data->th_data.cond, NULL);
+	start_drawer_threads(data->drawer_threads, data);
 }
