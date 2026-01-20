@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 11:03:13 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:42:42 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/20 14:24:17 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ void	set_dir(int direction, t_double2 *dir, t_double2 *plane)
 
 	pi = acos(-1.0);
 	if (direction == 'S')
-		return (rotate(dir, plane, 3 * pi / 2.0));
+		return (rotate(dir, plane, 3 * pi / 2.0, 1));
 	else if (direction == 'N')
-		return (rotate(dir, plane, pi / 2.0));
+		return (rotate(dir, plane, pi / 2.0, 1));
 	else if (direction == 'E')
-		return (rotate(dir, plane, pi));
+		return (rotate(dir, plane, pi, 1));
 	else
 		return ;
 }
@@ -61,7 +61,7 @@ void	set_player(int **map, t_vector2 map_size, t_double2 *plane,
 	coords = find_player(map, map_size, data);
 	data->player.dir = set_double2(-1.0, 0.0);
 	set_dir(map[coords.y][coords.x], &data->player.dir, plane);
-	data->player.pos = set_double2(coords.x, coords.y);
+	data->player.pos = set_double2(coords.x + 0.5, coords.y + 0.5);
 	map[coords.y][coords.x] = 0;
 }
 

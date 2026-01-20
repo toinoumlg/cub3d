@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 13:05:23 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:28:49 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/20 14:25:21 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 # include "struct.h"
 
 void	loop(t_cub3d *data);
-void	rotate(t_double2 *dir, t_double2 *plane, double speed);
-void	move(t_double2 *dir, t_cub3d *data, float speed);
+void	rotate(t_double2 *dir, t_double2 *plane, float direction,
+			double d_time);
+void	move(t_double2 *dir, t_cub3d *data, int direction);
 
 #endif

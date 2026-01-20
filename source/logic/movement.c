@@ -6,23 +6,27 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 12:26:41 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:33:55 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/20 14:25:30 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "struct.h"
 
-void	rotate(t_double2 *dir, t_double2 *plane, double speed)
+void	rotate(t_double2 *dir, t_double2 *plane, float direction, double d_time)
 {
 	double	old_dir_x;
 	double	old_plane_x;
 
 	old_dir_x = dir->x;
-	dir->x = dir->x * cos(speed) - dir->y * sin(speed);
-	dir->y = old_dir_x * sin(speed) + dir->y * cos(speed);
+	dir->x = dir->x * cos(direction * d_time) - dir->y * sin(direction
+			* d_time);
+	dir->y = old_dir_x * sin(direction * d_time) + dir->y * cos(direction
+			* d_time);
 	old_plane_x = plane->x;
-	plane->x = plane->x * cos(speed) - plane->y * sin(speed);
-	plane->y = old_plane_x * sin(speed) + plane->y * cos(speed);
+	plane->x = plane->x * cos(direction * d_time) - plane->y * sin(direction
+			* d_time);
+	plane->y = old_plane_x * sin(direction * d_time) + plane->y * cos(direction
+			* d_time);
 }
 
 static int	is_walkable(int **map, t_vector2 map_size, int x, int y)
@@ -32,14 +36,14 @@ static int	is_walkable(int **map, t_vector2 map_size, int x, int y)
 	return (map[y][x] == 0);
 }
 
-void	move(t_double2 *dir, t_cub3d *data, float speed)
+void	move(t_double2 *dir, t_cub3d *data, int direction)
 {
 	t_double2	new_pos;
 	t_double2	*old_pos;
 
 	old_pos = &data->player.pos;
-	new_pos.x = old_pos->x + dir->x * speed;
-	new_pos.y = old_pos->y + dir->y * speed;
+	new_pos.x = old_pos->x + dir->x * (direction * data->timer.delta_time);
+	new_pos.y = old_pos->y + dir->y * (direction * data->timer.delta_time);
 	if (is_walkable(data->map, data->map_size, (int)old_pos->x, (int)new_pos.y))
 		old_pos->y = new_pos.y;
 	if (is_walkable(data->map, data->map_size, (int)new_pos.x, (int)old_pos->y))

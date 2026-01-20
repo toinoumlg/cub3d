@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 13:59:30 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:34:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/20 14:57:22 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	flood_fill(int x, int y, t_vector2 map_size, t_cub3d *data)
 	int	**map;
 
 	map = data->map;
-	if (x < 0 || x >= map_size.x || y < 0 || y > map_size.y || map[y][x] == -1)
+	if (x < 0 || x >= map_size.x || y < 0 || y >= map_size.y || map[y][x] == -1)
 		exit_error("Map contains hole(s)", data);
 	if (map[y][x] != 0)
 		return ;

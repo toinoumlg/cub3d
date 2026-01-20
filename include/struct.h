@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:29:04 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/20 14:44:39 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,9 @@
 # include <sys/time.h>
 
 # ifndef CONFIG
-#  define WINDOW_WIDTH 1280.0f
-#  define WINDOW_HEIGHT 720.0f
-#  define FPS 30.0f
+#  define WINDOW_WIDTH 1920.0f
+#  define WINDOW_HEIGHT 1080.0f
 #  define WINDOW_NAME "cub3d"
-#  define BLACK 0
-#  define SPEED 0.5
 #  define ROTATION 0.1
 # endif
 

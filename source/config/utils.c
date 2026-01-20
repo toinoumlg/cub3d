@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 14:04:09 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:55:53 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/20 14:53:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	ft_strlen_with_tab(char *str)
 
 char	*find_in_config(char *to_find, char **config)
 {
-	while (config)
+	while (*config)
 	{
 		if (!ft_strncmp(to_find, *config, ft_strlen(to_find)))
 			return (*config);
@@ -71,6 +71,9 @@ int	try_open(char *config)
 {
 	int	fd;
 
+	if (!config || ft_strncmp(ft_strnstr(config, ".cub", ft_strlen(config)),
+			".cub", 5))
+		exit_error("No map file or invalid extension", NULL);
 	fd = open(config, O_RDONLY);
 	if (fd < 0)
 		exit_error("Wrong config file name", NULL);
