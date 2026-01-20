@@ -1,4 +1,7 @@
 {
 	"debbuger.cwd": "", // folder of makefile
-	"debbuger.bin": "cub3d" // binnary name
+	"debbuger.bin": "cub3d",
+	"files.associations": {
+		"swap.h": "c"
+	} // binnary name
 }

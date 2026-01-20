@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 13:49:19 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:56:56 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/20 14:44:56 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,17 @@ static int	handle_keys(int key_stroked, t_cub3d *data)
 	if (key_stroked == 65307)
 		return (mlx_loop_end(data->mlx), 0);
 	if (key_stroked == XK_Right)
-		rotate(&data->player.dir, &data->plane, -ROTATION);
+		rotate(&data->player.dir, &data->plane, -1, data->timer.delta_time);
 	if (key_stroked == XK_Left)
-		rotate(&data->player.dir, &data->plane, ROTATION);
+		rotate(&data->player.dir, &data->plane, 1, data->timer.delta_time);
 	if (key_stroked == XK_w)
-		move(&data->player.dir, data, SPEED);
+		move(&data->player.dir, data, 2);
 	if (key_stroked == XK_s)
-		move(&data->player.dir, data, -SPEED);
+		move(&data->player.dir, data, -2);
 	if (key_stroked == XK_d)
-		move(&data->plane, data, SPEED);
+		move(&data->plane, data, 2);
 	if (key_stroked == XK_a)
-		move(&data->plane, data, -SPEED);
+		move(&data->plane, data, -2);
 	return (0);
 }
 
@@ -47,9 +47,12 @@ static void	fps_counter(t_cub3d *data)
 {
 	char	*tmp;
 
+	// char	*join;
 	tmp = ft_itoa((int)(1 / data->timer.delta_time));
 	mlx_string_put(data->mlx, data->window, 5, 10, __INT_MAX__, tmp);
 	free(tmp);
+	// tmp = ft_itoa(data->player.pos.)
+	// mlx_string_put(data->mlx, data->window, 5, 20, __INT_MAX__, tmp);
 }
 
 static int	update(t_cub3d *data)
