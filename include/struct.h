@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/16 11:48:41 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/18 09:01:07 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 #  define BLACK 0
 #  define SPEED 0.5
 #  define ROTATION 0.1
-#  define THREAD_COUNT 4
+#  define THREAD_COUNT 8
 # endif
 
 typedef struct s_cub3d	t_cub3d;
@@ -98,6 +98,7 @@ typedef struct s_thread_data
 	pthread_cond_t		cond;
 	pthread_mutex_t		mutex;
 	int					draw_finished;
+	int					frame;
 }						t_thread_data;
 
 typedef struct s_cub3d

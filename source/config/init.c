@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:46:30 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/16 12:08:16 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/18 09:01:44 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	init_cub3d(t_cub3d *data, int ac, char *file)
 	copy_config(size, file, data);
 	parse_config(data);
 	set_timer(data);
-	data->th_data.draw_finished = 1;
+	data->th_data.draw_finished = 0;
 	pthread_mutex_init(&data->th_data.mutex, NULL);
 	pthread_cond_init(&data->th_data.cond, NULL);
 	start_drawer_threads(data->drawer_threads, data);

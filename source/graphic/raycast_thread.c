@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 09:26:38 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/16 11:24:41 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/18 08:55:49 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,15 +66,11 @@ static void	generate_line(t_raycaster *rc, int **map)
 		rc->perp_dist = (rc->s_dist.y - rc->d_dist.y);
 }
 
-static void	init_raycast(t_raycaster *rc, t_player player, t_double2 plane,
-		t_vector2 thread_limit)
+static void	init_raycast(t_raycaster *rc, t_player player, t_double2 plane)
 {
-	int	widht;
-
-	widht = thread_limit.y - thread_limit.x;
 	rc->map_pos.x = (int)player.pos.x;
 	rc->map_pos.y = (int)player.pos.y;
-	rc->camera.x = 2.0 * rc->x / (double)widht - 1.0;
+	rc->camera.x = 2.0 * rc->x / (double)WINDOW_WIDTH - 1.0;
 	rc->ray_dir.x = player.dir.x + plane.x * rc->camera.x;
 	rc->ray_dir.y = player.dir.y + plane.y * rc->camera.x;
 	if (rc->ray_dir.x == 0.0)
@@ -104,8 +100,7 @@ void	raycast_thread(t_drawer *drawer)
 	rc.x = drawer->thread_limit.x;
 	while (rc.x < drawer->thread_limit.y)
 	{
-		init_raycast(&rc, drawer->data->player, drawer->data->plane,
-			drawer->thread_limit);
+		init_raycast(&rc, drawer->data->player, drawer->data->plane);
 		check_ray_dir(&rc, drawer->data->player.pos);
 		generate_line(&rc, drawer->data->map);
 		set_draw_limit(rc.perp_dist, &rc.line_height, &rc.draw_limit);
