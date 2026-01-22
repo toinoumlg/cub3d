@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 13:49:19 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/20 14:44:56 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/22 17:21:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ static int	handle_keys(int key_stroked, t_cub3d *data)
 	if (key_stroked == 65307)
 		return (mlx_loop_end(data->mlx), 0);
 	if (key_stroked == XK_Right)
-		rotate(&data->player.dir, &data->plane, -1, data->timer.delta_time);
-	if (key_stroked == XK_Left)
 		rotate(&data->player.dir, &data->plane, 1, data->timer.delta_time);
+	if (key_stroked == XK_Left)
+		rotate(&data->player.dir, &data->plane, -1, data->timer.delta_time);
 	if (key_stroked == XK_w)
 		move(&data->player.dir, data, 2);
 	if (key_stroked == XK_s)

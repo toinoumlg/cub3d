@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:31:21 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:28:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/22 15:20:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,6 @@ int		create_trgb(unsigned char t, unsigned char r, unsigned char g,
 			unsigned char b);
 void	clear_image(t_cub3d *data);
 void	draw_vertical_line(t_raycaster rc, t_cub3d *data);
-void	pxl_put(t_cub3d *data, int x, int y, int color);
+void	pxl_put(t_img img, int x, int y, int color);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:56:43 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/20 14:14:45 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/22 15:20:41 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ void	clear_image(t_cub3d *data)
 	{
 		x = 0;
 		while (x < WINDOW_WIDTH)
-			pxl_put(data, x++, y, data->floor);
+			pxl_put(data->buffer, x++, y, data->floor);
 		y++;
 	}
 	while (y < WINDOW_HEIGHT)
 	{
 		x = 0;
 		while (x < WINDOW_WIDTH)
-			pxl_put(data, x++, y, data->ceiling);
+			pxl_put(data->buffer, x++, y, data->ceiling);
 		y++;
 	}
 }
@@ -64,7 +64,7 @@ void	draw_vertical_line(t_raycaster rc, t_cub3d *data)
 		rc.texture.y += rc.texture_step;
 		color = get_texture_pixel_color(data->textures[get_texture_index(rc)],
 				rc.texture.x, rc.texture.y);
-		pxl_put(data, rc.x, rc.draw_limit.x, color);
+		pxl_put(data->buffer, rc.x, rc.draw_limit.x, color);
 		rc.draw_limit.x++;
 	}
 }

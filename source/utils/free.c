@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 13:43:50 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:56:03 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/22 13:32:53 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,9 @@ static void	free_map(int **map, int y)
 
 static void	ft_close(int *fd)
 {
-	if (*fd)
+	if (*fd >= 0)
 		close(*fd);
+	*fd = -1;
 }
 
 static void	free_mlx(t_cub3d *data)

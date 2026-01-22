@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 11:03:13 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/22 11:55:12 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/22 18:05:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ void	set_dir(int direction, t_double2 *dir, t_double2 *plane)
 {
 	double	pi;
 
-	pi = acos(-1.0);
+	pi = acos(-1.0) / 180;
 	if (direction == 'S')
 		return (rotate(dir, plane, 3 * pi / 2.0, 1));
 	else if (direction == 'N')
 		return (rotate(dir, plane, pi / 2.0, 1));
-	else if (direction == 'E')
+	else if (direction == 'W')
 		return (rotate(dir, plane, pi, 1));
 	else
 		return ;
@@ -34,23 +34,30 @@ void	set_dir(int direction, t_double2 *dir, t_double2 *plane)
 
 static t_vector2	find_player(int **map, t_vector2 map_size, t_cub3d *data)
 {
-	t_vector2	new;
+	t_vector2	i;
+	t_vector2	pos;
 
-	new = set_vector2(0, 0);
-	while (new.y < map_size.y)
+	pos = set_vector2(-1, -1);
+	i = set_vector2(0, 0);
+	while (i.y < map_size.y)
 	{
-		new.x = 0;
-		while (new.x < map_size.x)
+		i.x = 0;
+		while (i.x < map_size.x)
 		{
-			if (map[new.y][new.x] == 'N' || map[new.y][new.x] == 'E'
-				|| map[new.y][new.x] == 'S' || map[new.y][new.x] == 'W')
-				return (new);
-			new.x++;
+			if (map[i.y][i.x] == 'N' || map[i.y][i.x] == 'E'
+				|| map[i.y][i.x] == 'S' || map[i.y][i.x] == 'W')
+			{
+				if (pos.y > 0 || pos.x > 0)
+					exit_error("Multiple starting position", data);
+				pos = i;
+			}
+			i.x++;
 		}
-		new.y++;
+		i.y++;
 	}
-	exit_error("No player position on map", data);
-	return (new);
+	if (pos.x < 0 || pos.y < 0)
+		exit_error("No player position on map", data);
+	return (pos);
 }
 
 void	set_player(int **map, t_vector2 map_size, t_double2 *plane,
@@ -58,8 +65,9 @@ void	set_player(int **map, t_vector2 map_size, t_double2 *plane,
 {
 	t_vector2	coords;
 
+	data->plane = set_double2(0.0, FOV);
 	coords = find_player(map, map_size, data);
-	data->player.dir = set_double2(-1.0, 0.0);
+	data->player.dir = set_double2(1.0, 0.0);
 	set_dir(map[coords.y][coords.x], &data->player.dir, plane);
 	data->player.pos = set_double2(coords.x + 0.5, coords.y + 0.5);
 	map[coords.y][coords.x] = 0;
@@ -75,7 +83,6 @@ void	parse_config(t_cub3d *data)
 	data->textures[2] = init_texture_from_config("NO ", data);
 	data->textures[3] = init_texture_from_config("EA ", data);
 	load_map(data->config, data);
-	data->plane = set_double2(0.0, 0.66);
 	set_player(data->map, data->map_size, &data->plane, data);
 	flood_fill(data->player.pos.x, data->player.pos.y, data->map_size, data);
 	restore_map(data->map, data->map_size);

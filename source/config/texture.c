@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 14:04:29 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/22 10:12:45 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/22 13:48:35 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,12 @@ int	check_rgb(char *rgb, t_cub3d *data)
 		exit_error("Missing value(s) for rbg color", data);
 	while (rgb[i])
 		if (!ft_isdigit(rgb[i++]))
+		{
+			free(rgb);
 			exit_error("Rbg value contain a character", data);
+		}
 	color = ft_atoi(rgb);
+	free(rgb);
 	if (color < 0 || color > 255)
 		exit_error("Rgb value is outside of it's range", data);
 	return (color);
@@ -39,6 +43,7 @@ int	set_color_from_config(char *to_find, char **config, t_cub3d *data)
 {
 	char	*line;
 	char	**rgb;
+	int		color;
 
 	line = find_in_config(to_find, config);
 	if (!line)
@@ -47,8 +52,11 @@ int	set_color_from_config(char *to_find, char **config, t_cub3d *data)
 	rgb = ft_split(line, ',');
 	if (!rgb)
 		exit_error("Failed to split rbg values", data);
-	return (create_trgb(0, check_rgb(rgb[0], data), check_rgb(rgb[1], data),
-			check_rgb(rgb[2], data)));
+	// not leak free
+	color = create_trgb(0, check_rgb(rgb[0], data), check_rgb(rgb[1], data),
+			check_rgb(rgb[2], data));
+	free(rgb);
+	return (color);
 }
 
 t_img	init_texture_from_config(char *to_find, t_cub3d *data)
@@ -65,5 +73,7 @@ t_img	init_texture_from_config(char *to_find, t_cub3d *data)
 	if (!img.ptr)
 		exit_error("Loading texture from file", data);
 	img.addr = mlx_get_data_addr(img.ptr, &img.bpp, &img.lenght, &img.end);
+	if (!img.addr)
+		exit_error("Getting address from image", data);
 	return (img);
 }

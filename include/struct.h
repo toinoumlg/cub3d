@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/22 12:16:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/22 17:59:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #  define WINDOW_WIDTH 1920.0f
 #  define WINDOW_HEIGHT 1080.0f
 #  define WINDOW_NAME "cub3d"
-#  define ROTATION 0.1
+#  define FOV 0.66
 # endif
 
 typedef struct s_double2

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 09:50:31 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:55:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/22 16:56:00 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,22 @@
 #include <stdio.h>
 #include <string.h>
 
-char	*check_map_line(char *line)
+int map_line(char *line)
 {
 	int	i;
 
 	i = 0;
 	if (!line)
-		return (NULL);
+		return (0);
 	while (line[i])
 	{
 		if (line[i] != ' ' && line[i] != '\t' && line[i] != '0'
 			&& line[i] != '1' && line[i] != 'N' && line[i] != 'E'
 			&& line[i] != 'S' && line[i] != 'W')
-			return (NULL);
+			return (0);
 		i++;
 	}
-	return (line);
+	return (1);
 }
 
 void	get_map_size(char **config, t_vector2 *map_size)
@@ -41,7 +41,7 @@ void	get_map_size(char **config, t_vector2 *map_size)
 
 	while (*config)
 	{
-		if (!check_map_line(*config))
+		if (!map_line(*config) || **config == '\n')
 			break ;
 		tmp = ft_strlen_with_tab(*config);
 		if (tmp > map_size->x)
@@ -51,7 +51,7 @@ void	get_map_size(char **config, t_vector2 *map_size)
 	}
 }
 
-void	copy_map_row(char *line, int *map_row)
+void	copy_map_row(char *line, int *map_row, t_cub3d *data)
 {
 	int	i;
 
@@ -67,8 +67,26 @@ void	copy_map_row(char *line, int *map_row)
 		else if (*line == ' ')
 			i++;
 		else
-			return ;
+			exit_error("Invalid character in map", data);
 		line++;
+	}
+}
+
+void	check_remaining_lines(char **config, t_cub3d *data)
+{
+	int	i;
+
+	while (*config)
+	{
+		i = 0;
+		while ((*config)[i])
+		{
+			if ((*config)[i] != '\n' && (*config)[i] != ' '
+				&& (*config)[i] != '\t' )
+				exit_error("Config files has non white-space character after map", data);
+			i++;
+		}
+		config++;
 	}
 }
 
@@ -82,17 +100,19 @@ void	copy_map(char **config, t_cub3d *data)
 		exit_error("Map is too small", data);
 	alloc_map(data);
 	while (*config)
-		copy_map_row(*config++, data->map[i++]);
+	{
+		if (**config == '\n')
+			break ;
+		copy_map_row(*config++, data->map[i++], data);
+	}
+	check_remaining_lines(config, data);
 }
 
 void	load_map(char **config, t_cub3d *data)
 {
-	char	*line;
-
 	while (*config)
 	{
-		line = check_map_line(*config);
-		if (line)
+		if (map_line(*config))
 			return (copy_map(config, data));
 		config++;
 	}
