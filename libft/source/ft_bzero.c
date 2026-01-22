@@ -6,11 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 11:07:47 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/08 17:37:50 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/21 08:12:29 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include <unistd.h>
+#include <unistd.h>
 
 // Erases the data in the n bytes of the memory.
 // Starting at the location pointed to by s, by writing '\0' to that area.

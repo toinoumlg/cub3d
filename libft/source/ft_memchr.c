@@ -6,11 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 15:08:33 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/08 17:38:02 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/21 08:11:21 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include <unistd.h>
+#include <unistd.h>
 
 // Scans n bytes of the memory pointed to by s for the first instance of c.
 // Returns a pointer to the matching byte or NULL if not found.

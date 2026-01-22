@@ -6,11 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:15:01 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/08 17:37:57 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/21 08:11:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include <unistd.h>
+#include <unistd.h>
 
 // Fills first n bytes of memory area pointed by s with constant byte c.
 void	*ft_memset(void *s, int c, size_t n)

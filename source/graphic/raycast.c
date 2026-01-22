@@ -6,15 +6,16 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 09:26:38 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/20 14:16:14 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/21 20:00:44 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub_utils.h"
 #include "graphic.h"
 #include "struct.h"
+#include <stdio.h>
 
-static void	check_ray_dir(t_raycaster *rc, t_double2 player_pos)
+static void	find_ray_dir(t_raycaster *rc, t_double2 player_pos)
 {
 	if (rc->ray_dir.x < 0)
 	{
@@ -66,7 +67,8 @@ static void	generate_line(t_raycaster *rc, int **map)
 		rc->perp_dist = (rc->s_dist.y - rc->d_dist.y);
 }
 
-static void	init_raycast(t_raycaster *rc, t_player player, t_double2 plane)
+static void	init_raycast_values(t_raycaster *rc, t_player player,
+		t_double2 plane)
 {
 	rc->map_pos.x = (int)player.pos.x;
 	rc->map_pos.y = (int)player.pos.y;
@@ -81,7 +83,7 @@ static void	init_raycast(t_raycaster *rc, t_player player, t_double2 plane)
 	rc->d_dist.y = ft_abs(1 / rc->ray_dir.y);
 }
 
-static void	set_draw_limit(double perp_dist, int *line_height,
+static void	set_image_draw_limit(double perp_dist, int *line_height,
 		t_vector2 *draw_limit)
 {
 	*line_height = (int)(WINDOW_HEIGHT / perp_dist);
@@ -96,14 +98,18 @@ static void	set_draw_limit(double perp_dist, int *line_height,
 void	raycast(t_cub3d *data)
 {
 	t_raycaster	rc;
+	// int			mini_map_step;
 
 	rc.x = 0;
+	// mini_map_step = 1;
 	while (rc.x < (int)WINDOW_WIDTH)
 	{
-		init_raycast(&rc, data->player, data->plane);
-		check_ray_dir(&rc, data->player.pos);
+		init_raycast_values(&rc, data->player, data->plane);
+		find_ray_dir(&rc, data->player.pos);
 		generate_line(&rc, data->map);
-		set_draw_limit(rc.perp_dist, &rc.line_height, &rc.draw_limit);
+		// if (!(rc.x % mini_map_step))
+		draw_line_on_map(rc, data);
+		set_image_draw_limit(rc.perp_dist, &rc.line_height, &rc.draw_limit);
 		draw_vertical_line(rc, data);
 		rc.x++;
 	}

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:10:37 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/12 12:54:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/21 08:17:07 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ static int	ft_char_in_set(char c, char const *set)
 // From the beginning and the end of the string
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	char *str;
-	size_t i;
-	size_t start;
-	size_t end;
+	char	*str;
+	size_t	i;
+	size_t	start;
+	size_t	end;
 
 	start = 0;
 	while (s1[start] && ft_char_in_set(s1[start], set))

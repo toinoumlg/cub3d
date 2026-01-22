@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:29:14 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:43:45 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/21 10:54:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,16 @@ int	create_trgb(unsigned char t, unsigned char r, unsigned char g,
 	return (*(int *)(unsigned char [4]){b, g, r, t});
 }
 
-static int	addr_offset(t_img buffer, int x, int y)
+static int	addr_offset(t_img img, int x, int y)
 {
-	return (y * buffer.lenght + x * (buffer.bpp / 8));
+	return (y * img.lenght + x * (img.bpp / 8));
 }
 
-void	pxl_put(t_cub3d *data, int x, int y, int color)
+void	pxl_put(t_img img, int x, int y, int color)
 {
 	char	*pxl;
 
-	pxl = data->buffer.addr + addr_offset(data->buffer, x, y);
+	pxl = img.addr + addr_offset(img, x, y);
 	*(unsigned int *)pxl = color;
 }
 

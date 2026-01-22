@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 13:49:19 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/20 14:44:56 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/21 10:38:06 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,11 @@ static int	update(t_cub3d *data)
 {
 	get_current_time(data);
 	clear_image(data);
+	draw_map(data);
 	raycast(data);
 	fps_counter(data);
 	mlx_put_image_to_window(data->mlx, data->window, data->buffer.ptr, 0, 0);
+	mlx_put_image_to_window(data->mlx, data->window, data->minimap.ptr, 20, 20);
 	fps_counter(data);
 	return (0);
 }

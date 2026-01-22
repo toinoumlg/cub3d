@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 13:02:28 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/08 17:54:51 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/21 09:10:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,15 +88,13 @@ char	**ft_split(char const *s, char c)
 		if (s[i] != c)
 		{
 			split[j] = fill_word(s + i, c);
-			if (!split[j])
+			if (!split[j++])
 				return (free_split(split), NULL);
 			while (s[i] != c && s[i])
 				i++;
-			j++;
 		}
 		else
 			i++;
 	}
-	split[j] = 0;
 	return (split);
 }
