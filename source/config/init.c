@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:46:30 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/20 13:30:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/22 12:46:38 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,16 @@ void	init_mlx(t_cub3d *data)
 		exit_error("Getting buffer image address", data);
 }
 
-void	init_cub3d(t_cub3d *data, int ac, char **av)
+void	init_cub3d(t_cub3d *data, int ac, char *file)
 {
 	int	size;
 
+	ft_memset(data, 0, sizeof(t_cub3d));
 	if (ac != 2)
 		exit_error("No config file provided", data);
-	size = try_open(av[1]);
-	ft_memset(data, 0, sizeof(t_cub3d));
+	size = try_open(file);
 	init_mlx(data);
-	copy_config(size, av[1], data);
+	copy_config(size, file, data);
 	parse_config(data);
 	set_timer(data);
 }

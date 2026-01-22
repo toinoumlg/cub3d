@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/20 14:44:39 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/22 12:16:32 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ typedef struct s_img
 	char			*addr;
 	int				bpp;
 	int				lenght;
+	int				end;
 	int				w;
 	int				h;
-	int				end;
 }					t_img;
 
 typedef struct s_player

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 11:03:13 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/20 14:24:17 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/22 11:55:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	set_player(int **map, t_vector2 map_size, t_double2 *plane,
 
 void	parse_config(t_cub3d *data)
 {
+	// fix texture can be with S or SO
 	data->ceiling = set_color_from_config("C ", data->config, data);
 	data->floor = set_color_from_config("F ", data->config, data);
 	data->textures[0] = init_texture_from_config("SO ", data);
