@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 14:04:29 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/20 15:12:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/22 10:12:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,9 @@ int	check_rgb(char *rgb, t_cub3d *data)
 
 int	set_color_from_config(char *to_find, char **config, t_cub3d *data)
 {
-	int		i;
 	char	*line;
 	char	**rgb;
 
-	i = 0;
 	line = find_in_config(to_find, config);
 	if (!line)
 		exit_error("Missing rgb values in config file", data);
