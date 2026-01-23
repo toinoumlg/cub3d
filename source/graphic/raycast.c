@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 09:26:38 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/20 14:16:14 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/23 15:14:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,16 @@ static void	generate_line(t_raycaster *rc, int **map)
 
 static void	init_raycast(t_raycaster *rc, t_player player, t_double2 plane)
 {
+	float cam_x;
 	rc->map_pos.x = (int)player.pos.x;
 	rc->map_pos.y = (int)player.pos.y;
-	rc->camera.x = 2.0 * rc->x / (double)WINDOW_WIDTH - 1.0;
-	rc->ray_dir.x = player.dir.x + plane.x * rc->camera.x;
-	rc->ray_dir.y = player.dir.y + plane.y * rc->camera.x;
-	if (rc->ray_dir.x == 0.0)
-		rc->ray_dir.x = 1e-9;
-	if (rc->ray_dir.y == 0.0)
-		rc->ray_dir.y = 1e-9;
+	cam_x = 2.0 * rc->x / (double)WINDOW_WIDTH - 1.0;
+	rc->ray_dir.x = player.dir.x + plane.x * cam_x;
+	rc->ray_dir.y = player.dir.y + plane.y * cam_x;
+	// if (rc->ray_dir.x == 0.0)
+	// 	rc->ray_dir.x = 1e-9;
+	// if (rc->ray_dir.y == 0.0)
+	// 	rc->ray_dir.y = 1e-9;
 	rc->d_dist.x = ft_abs(1 / rc->ray_dir.x);
 	rc->d_dist.y = ft_abs(1 / rc->ray_dir.y);
 }

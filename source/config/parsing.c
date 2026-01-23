@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 11:03:13 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/22 18:05:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/23 16:02:33 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,14 @@ static t_vector2	find_player(int **map, t_vector2 map_size, t_cub3d *data)
 	return (pos);
 }
 
-void	set_player(int **map, t_vector2 map_size, t_double2 *plane,
-		t_cub3d *data)
+void	set_player(int **map, t_vector2 map_size, t_cub3d *data)
 {
 	t_vector2	coords;
 
-	data->plane = set_double2(0.0, FOV);
 	coords = find_player(map, map_size, data);
-	data->player.dir = set_double2(1.0, 0.0);
-	set_dir(map[coords.y][coords.x], &data->player.dir, plane);
+	data->player.dir = set_double2(0, -1.0);
+	data->plane = set_double2(0.66, 0.0);
+	set_dir(map[coords.y][coords.x], &data->player.dir, &data->plane);
 	data->player.pos = set_double2(coords.x + 0.5, coords.y + 0.5);
 	map[coords.y][coords.x] = 0;
 }
@@ -83,7 +82,7 @@ void	parse_config(t_cub3d *data)
 	data->textures[2] = init_texture_from_config("NO ", data);
 	data->textures[3] = init_texture_from_config("EA ", data);
 	load_map(data->config, data);
-	set_player(data->map, data->map_size, &data->plane, data);
+	set_player(data->map, data->map_size, data);
 	flood_fill(data->player.pos.x, data->player.pos.y, data->map_size, data);
 	restore_map(data->map, data->map_size);
 }
