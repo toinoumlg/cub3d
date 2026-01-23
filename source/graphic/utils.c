@@ -6,53 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:29:14 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/22 15:21:23 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 00:19:20 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "struct.h"
 
-int	create_trgb(unsigned char t, unsigned char r, unsigned char g,
+t_pxl	create_trgb(unsigned char t, unsigned char r, unsigned char g,
 		unsigned char b)
 {
-	return (*(int *)(unsigned char[4]){b, g, r, t});
-}
-
-static int	addr_offset(t_img img, int x, int y)
-{
-	return (y * img.lenght + x * (img.bpp / 8));
-}
-
-void	pxl_put(t_img img, int x, int y, int color)
-{
-	char	*pxl;
-
-	pxl = img.addr + addr_offset(img, x, y);
-	*(unsigned int *)pxl = color;
-}
-
-int	get_texture_pixel_color(t_img texture, int text_x, int text_y)
-{
-	char	*pxl;
-
-	pxl = texture.addr + addr_offset(texture, text_x, text_y);
-	return (*(unsigned int *)pxl);
-}
-
-int	get_texture_index(t_raycaster rc)
-{
-	if (!rc.side)
-	{
-		if ((rc.ray_dir.x > 0))
-			return (1);
-		else
-			return (3);
-	}
-	else
-	{
-		if ((rc.ray_dir.y > 0))
-			return (2);
-		else
-			return (0);
-	}
+	return (*(int *)(unsigned char [4]){b, g, r, t});
 }

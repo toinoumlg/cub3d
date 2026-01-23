@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:46:30 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/22 12:46:38 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/23 22:11:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,12 @@ void	init_mlx(t_cub3d *data)
 	data->buffer.ptr = mlx_new_image(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	if (!data->buffer.ptr)
 		exit_error("Initializing buffer image", data);
-	data->buffer.addr = mlx_get_data_addr(data->buffer.ptr, &data->buffer.bpp,
-			&data->buffer.lenght, &data->buffer.end);
+	data->buffer.addr = (t_pxl *)mlx_get_data_addr(data->buffer.ptr,
+			&data->buffer.bpp, &data->buffer.lenght, &data->buffer.end);
 	if (!data->buffer.addr)
 		exit_error("Getting buffer image address", data);
+	data->buffer.w = WINDOW_WIDTH;
+	data->buffer.h = WINDOW_HEIGHT;
 }
 
 void	init_cub3d(t_cub3d *data, int ac, char *file)

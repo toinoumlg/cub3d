@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 09:50:31 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/22 16:56:00 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/23 23:54:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <string.h>
 
-int map_line(char *line)
+int	map_line(char *line)
 {
 	int	i;
 
@@ -74,16 +74,18 @@ void	copy_map_row(char *line, int *map_row, t_cub3d *data)
 
 void	check_remaining_lines(char **config, t_cub3d *data)
 {
-	int	i;
+	int		i;
+	char	*error_str;
 
+	error_str = "Config files has non white-space character after map";
 	while (*config)
 	{
 		i = 0;
 		while ((*config)[i])
 		{
 			if ((*config)[i] != '\n' && (*config)[i] != ' '
-				&& (*config)[i] != '\t' )
-				exit_error("Config files has non white-space character after map", data);
+				&& (*config)[i] != '\t')
+				exit_error(error_str, data);
 			i++;
 		}
 		config++;

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 11:03:13 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/23 16:02:33 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 00:16:26 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void	set_dir(int direction, t_double2 *dir, t_double2 *plane)
+void	set_dir(int direction, t_player *player, double pi)
 {
-	double	pi;
-
-	pi = acos(-1.0) / 180;
-	if (direction == 'S')
-		return (rotate(dir, plane, 3 * pi / 2.0, 1));
-	else if (direction == 'N')
-		return (rotate(dir, plane, pi / 2.0, 1));
-	else if (direction == 'W')
-		return (rotate(dir, plane, pi, 1));
+	if (direction == 'W')
+		return (rotate(&player->dir, &player->plane, 3 * pi / 2.0, 1));
+	else if (direction == 'E')
+		return (rotate(&player->dir, &player->plane, pi / 2.0, 1));
+	else if (direction == 'S')
+		return (rotate(&player->dir, &player->plane, pi, 1));
 	else
 		return ;
 }
@@ -60,21 +57,32 @@ static t_vector2	find_player(int **map, t_vector2 map_size, t_cub3d *data)
 	return (pos);
 }
 
+static float	get_plane_lenght(double pi)
+{
+	float	deg_to_rad;
+
+	deg_to_rad = FOV * pi / 180.0f;
+	return (tanf(deg_to_rad / 2.0f));
+}
+
 void	set_player(int **map, t_vector2 map_size, t_cub3d *data)
 {
 	t_vector2	coords;
+	float		plane_lenght;
+	double		pi;
 
+	pi = acos(-1.0);
+	plane_lenght = get_plane_lenght(pi);
 	coords = find_player(map, map_size, data);
 	data->player.dir = set_double2(0, -1.0);
-	data->plane = set_double2(0.66, 0.0);
-	set_dir(map[coords.y][coords.x], &data->player.dir, &data->plane);
+	data->player.plane = set_double2(plane_lenght, 0.0);
+	set_dir(map[coords.y][coords.x], &data->player, pi);
 	data->player.pos = set_double2(coords.x + 0.5, coords.y + 0.5);
 	map[coords.y][coords.x] = 0;
 }
 
 void	parse_config(t_cub3d *data)
 {
-	// fix texture can be with S or SO
 	data->ceiling = set_color_from_config("C ", data->config, data);
 	data->floor = set_color_from_config("F ", data->config, data);
 	data->textures[0] = init_texture_from_config("SO ", data);

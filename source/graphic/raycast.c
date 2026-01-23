@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 09:26:38 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/23 15:14:45 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/23 23:41:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,98 +14,75 @@
 #include "graphic.h"
 #include "struct.h"
 
-static void	check_ray_dir(t_raycaster *rc, t_double2 player_pos)
+void	init_raycast(t_raycaster *rc, t_player *player, int x)
 {
-	if (rc->ray_dir.x < 0)
-	{
-		rc->step.x = -1;
-		rc->s_dist.x = (player_pos.x - rc->map_pos.x) * rc->d_dist.x;
-	}
-	else
-	{
-		rc->step.x = 1;
-		rc->s_dist.x = (rc->map_pos.x + 1 - player_pos.x) * rc->d_dist.x;
-	}
-	if (rc->ray_dir.y < 0)
-	{
-		rc->step.y = -1;
-		rc->s_dist.y = (player_pos.y - rc->map_pos.y) * rc->d_dist.y;
-	}
-	else
-	{
-		rc->step.y = 1;
-		rc->s_dist.y = (rc->map_pos.y + 1 - player_pos.y) * rc->d_dist.y;
-	}
-}
+	float	cam_x;
 
-static void	generate_line(t_raycaster *rc, int **map)
-{
-	int	hit;
-
-	hit = 0;
-	while (hit == 0)
-	{
-		if (rc->s_dist.x < rc->s_dist.y)
-		{
-			rc->s_dist.x += rc->d_dist.x;
-			rc->map_pos.x += rc->step.x;
-			rc->side = 0;
-		}
-		else
-		{
-			rc->s_dist.y += rc->d_dist.y;
-			rc->map_pos.y += rc->step.y;
-			rc->side = 1;
-		}
-		if (map[rc->map_pos.y][rc->map_pos.x] > 0)
-			hit = 1;
-	}
-	if (rc->side == 0)
-		rc->perp_dist = (rc->s_dist.x - rc->d_dist.x);
-	else
-		rc->perp_dist = (rc->s_dist.y - rc->d_dist.y);
-}
-
-static void	init_raycast(t_raycaster *rc, t_player player, t_double2 plane)
-{
-	float cam_x;
-	rc->map_pos.x = (int)player.pos.x;
-	rc->map_pos.y = (int)player.pos.y;
-	cam_x = 2.0 * rc->x / (double)WINDOW_WIDTH - 1.0;
-	rc->ray_dir.x = player.dir.x + plane.x * cam_x;
-	rc->ray_dir.y = player.dir.y + plane.y * cam_x;
-	// if (rc->ray_dir.x == 0.0)
-	// 	rc->ray_dir.x = 1e-9;
-	// if (rc->ray_dir.y == 0.0)
-	// 	rc->ray_dir.y = 1e-9;
+	cam_x = 2.0 * x / WINDOW_WIDTH - 1.0;
+	if (player->inputs.zoom)
+		cam_x = cam_x / 2.0;
+	rc->ray_dir.x = player->dir.x + player->plane.x * cam_x;
+	rc->ray_dir.y = player->dir.y + player->plane.y * cam_x;
 	rc->d_dist.x = ft_abs(1 / rc->ray_dir.x);
 	rc->d_dist.y = ft_abs(1 / rc->ray_dir.y);
 }
 
-static void	set_draw_limit(double perp_dist, int *line_height,
-		t_vector2 *draw_limit)
+static void	set_draw_limit(t_raycaster *rc, t_player *player)
 {
-	*line_height = (int)(WINDOW_HEIGHT / perp_dist);
-	draw_limit->x = -*line_height / 2 + (int)WINDOW_HEIGHT / 2;
-	if (draw_limit->x < 0)
-		draw_limit->x = 0;
-	draw_limit->y = *line_height / 2 + (int)WINDOW_HEIGHT / 2;
-	if (draw_limit->y >= (int)WINDOW_HEIGHT)
-		draw_limit->y = (int)WINDOW_HEIGHT - 1;
+	rc->line_height = (WINDOW_HEIGHT / rc->perp_dist);
+	if (player->inputs.zoom)
+		rc->line_height = rc->line_height * 2;
+	rc->draw_limit.x = -rc->line_height / 2 + (int)WINDOW_HEIGHT / 2;
+	if (rc->draw_limit.x < 0)
+		rc->draw_limit.x = 0;
+	rc->draw_limit.y = rc->line_height / 2 + (int)WINDOW_HEIGHT / 2;
+	if (rc->draw_limit.y >= (int)WINDOW_HEIGHT)
+		rc->draw_limit.y = (int)WINDOW_HEIGHT - 1;
 }
 
-void	raycast(t_cub3d *data)
+t_img	*find_texture(int side, t_double2 ray_dir, t_img *textures)
 {
+	if (!side && ray_dir.x > 0)
+		return (&textures[1]);
+	else if (!side)
+		return (&textures[3]);
+	else if (ray_dir.y > 0)
+		return (&textures[2]);
+	else
+		return (&textures[0]);
+}
+
+static void	process_texture_coords(t_raycaster *rc, t_double2 player_pos,
+		t_img *textures)
+{
+	double	wall_x;
+
+	rc->text = find_texture(rc->side, rc->ray_dir, textures);
+	if (!rc->side)
+		wall_x = player_pos.y + rc->perp_dist * rc->ray_dir.y;
+	else
+		wall_x = player_pos.x + rc->perp_dist * rc->ray_dir.x;
+	wall_x -= floor(wall_x);
+	rc->text_coord.x = wall_x * rc->text->w;
+	rc->step = 1.0 * rc->text->w / rc->line_height;
+	rc->text_coord.y = (rc->draw_limit.x - WINDOW_HEIGHT / 2 + rc->line_height
+			/ 2) * rc->step;
+	if ((!rc->side && rc->ray_dir.x > 0) || (rc->side && rc->ray_dir.y < 0))
+		rc->text_coord.x = rc->text->w - rc->text_coord.x - 1;
+}
+
+void	raycast(int **map, t_player *player, t_img *textures, t_pxl *buffer)
+{
+	int			x;
 	t_raycaster	rc;
 
-	rc.x = 0;
-	while (rc.x < (int)WINDOW_WIDTH)
+	x = 0;
+	while (x < WINDOW_WIDTH)
 	{
-		init_raycast(&rc, data->player, data->plane);
-		check_ray_dir(&rc, data->player.pos);
-		generate_line(&rc, data->map);
-		set_draw_limit(rc.perp_dist, &rc.line_height, &rc.draw_limit);
-		draw_vertical_line(rc, data);
-		rc.x++;
+		init_raycast(&rc, player, x);
+		find_perp_dist(map, player->pos, &rc);
+		set_draw_limit(&rc, player);
+		process_texture_coords(&rc, player->pos, textures);
+		draw_vertical_line(x++, buffer, &rc);
 	}
 }
