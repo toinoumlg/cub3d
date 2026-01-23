@@ -1,0 +1,5 @@
+build
+mlx/obj
+libft/build
+
+*.a
