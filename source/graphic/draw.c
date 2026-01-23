@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:56:43 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/21 10:54:58 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/23 13:28:05 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,14 @@ static void	process_texture_coords(t_raycaster *rc, int width,
 
 void	draw_vertical_line(t_raycaster rc, t_cub3d *data)
 {
-	int	color;
+	int	color = RED;
 
 	process_texture_coords(&rc, data->textures->w, data->player.pos);
 	while (rc.draw_limit.x < rc.draw_limit.y)
 	{
 		rc.texture.y += rc.texture_step;
-		color = get_texture_pixel_color(data->textures[get_texture_index(rc)],
-				rc.texture.x, rc.texture.y);
+		// color = get_texture_pixel_color(data->textures[get_texture_index(rc)],
+		// 		rc.texture.x, rc.texture.y);
 		pxl_put(data->buffer, rc.x, rc.draw_limit.x++, color);
 	}
 }

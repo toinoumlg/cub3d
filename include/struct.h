@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/23 09:50:42 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/23 14:17:19 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ typedef struct s_player
 typedef struct s_raycaster
 {
 	t_double2			ray_dir;
-	t_double2			camera;
 	t_double2			d_dist;
 	t_double2			s_dist;
 	t_double2			texture;
@@ -75,7 +74,7 @@ typedef struct s_raycaster
 	t_vector2			step;
 	int					x;
 	int					side;
-	int					line_height;
+	float				line_height;
 	double				perp_dist;
 	double				wall_x;
 	double				texture_step;

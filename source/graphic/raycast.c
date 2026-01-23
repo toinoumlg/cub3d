@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 09:26:38 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/23 10:27:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/23 14:31:48 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,20 @@ static void	generate_line(t_raycaster *rc, int **map)
 			hit = 1;
 	}
 	if (rc->side == 0)
-		rc->perp_dist = (rc->s_dist.x - rc->d_dist.x);
+		rc->perp_dist = rc->s_dist.x - rc->d_dist.x;
 	else
-		rc->perp_dist = (rc->s_dist.y - rc->d_dist.y);
+		rc->perp_dist = rc->s_dist.y - rc->d_dist.y;
 }
 
 static void	init_raycast_values(t_raycaster *rc, t_player player,
 		t_double2 plane)
 {
-	rc->map_pos.x = (int)player.pos.x;
-	rc->map_pos.y = (int)player.pos.y;
-	rc->camera.x = 2.0 * rc->x / (double)WINDOW_WIDTH - 1;
-	rc->ray_dir.x = player.dir.x + plane.x * rc->camera.x;
-	rc->ray_dir.y = player.dir.y + plane.y * rc->camera.x;
+	double	cam_x;
+
+	rc->map_pos = set_vector2(player.pos.x, player.pos.y);
+	cam_x = 2 * rc->x / (double)WINDOW_WIDTH - 1;
+	rc->ray_dir.x = player.dir.x + plane.x * cam_x;
+	rc->ray_dir.y = player.dir.y + plane.y * cam_x;
 	if (rc->ray_dir.x == 0.0)
 		rc->ray_dir.x = 1e-9;
 	if (rc->ray_dir.y == 0.0)
@@ -83,32 +84,32 @@ static void	init_raycast_values(t_raycaster *rc, t_player player,
 	rc->d_dist.y = ft_abs(1 / rc->ray_dir.y);
 }
 
-static void	set_image_draw_limit(double perp_dist, int *line_height,
+static void	set_image_draw_limit(double perp_dist, float *line_height,
 		t_vector2 *draw_limit)
 {
-	*line_height = (int)(WINDOW_HEIGHT / perp_dist);
-	draw_limit->x = -*line_height / 2 + (int)WINDOW_HEIGHT / 2;
+	*line_height = WINDOW_HEIGHT / perp_dist;
+	draw_limit->x = -*line_height / 2.0 + WINDOW_HEIGHT / 2.0;
 	if (draw_limit->x < 0)
 		draw_limit->x = 0;
-	draw_limit->y = *line_height / 2 + (int)WINDOW_HEIGHT / 2;
-	if (draw_limit->y >= (int)WINDOW_HEIGHT)
-		draw_limit->y = (int)WINDOW_HEIGHT - 1;
+	draw_limit->y = *line_height / 2.0 + WINDOW_HEIGHT / 2.0;
+	if (draw_limit->y >= WINDOW_HEIGHT)
+		draw_limit->y = WINDOW_HEIGHT - 1;
 }
 
 void	raycast(t_cub3d *data)
 {
 	t_raycaster	rc;
+	int			mini_map_step;
 
-	// int			mini_map_step;
 	rc.x = 0;
-	// mini_map_step = 1;
+	mini_map_step = 1;
 	while (rc.x < (int)WINDOW_WIDTH)
 	{
 		init_raycast_values(&rc, data->player, data->plane);
 		find_ray_dir(&rc, data->player.pos);
 		generate_line(&rc, data->map);
-		// if (!(rc.x % mini_map_step))
-		draw_line_on_map(rc, data);
+		if (!(rc.x % mini_map_step))
+			draw_line_on_map(rc, data);
 		set_image_draw_limit(rc.perp_dist, &rc.line_height, &rc.draw_limit);
 		draw_vertical_line(rc, data);
 		rc.x++;

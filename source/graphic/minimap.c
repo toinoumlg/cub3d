@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 10:35:10 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/21 14:45:15 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/23 13:09:37 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static t_vector2	get_hit_pos_on_minimap(t_raycaster rc, t_double2 player_pos,
 	hit_map.y = player_pos.y + rc.perp_dist * rc.ray_dir.y;
 	hit_minimap.x = (hit_map.x - offset.x) * MINI_MAP_SCALE;
 	hit_minimap.y = (hit_map.y - offset.y) * MINI_MAP_SCALE;
-	set_minimap_max_value(&hit_minimap, data);
 	return (hit_minimap);
 }
 
@@ -70,12 +69,11 @@ void	plot_line_low(t_vector2 start, t_vector2 end, t_cub3d *data)
 		delta.y = -delta.y;
 	}
 	d = (2 * delta.y) - delta.x;
-	while (start.x < end.x)
+	while (start.x <= end.x)
 	{
-		if (data->map[start.y / MINI_MAP_SCALE][start.x / MINI_MAP_SCALE])
+		if (start.x < data->minimap.w && start.x >= 0
+			&& start.y < data->minimap.h && start.y >= 0)
 			pxl_put(data->minimap, start.x, start.y, BLUE);
-		else
-			return ;
 		if (d > 0)
 		{
 			start.y += yi;
@@ -101,9 +99,11 @@ void	plot_line_high(t_vector2 start, t_vector2 end, t_cub3d *data)
 		delta.x = -delta.x;
 	}
 	d = (2 * delta.x) - delta.y;
-	while (start.y < end.y)
+	while (start.y <= end.y)
 	{
-		pxl_put(data->minimap, start.x, start.y, BLUE);
+		if (start.x < data->minimap.w && start.x >= 0
+			&& start.y < data->minimap.h && start.y >= 0)
+			pxl_put(data->minimap, start.x, start.y, BLUE);
 		if (d > 0)
 		{
 			start.x = start.x + xi;
@@ -144,7 +144,7 @@ int	get_minimap_color(t_cub3d *data, float x, float y, t_double2 offset)
 
 	x = x / MINI_MAP_SCALE + offset.x;
 	y = y / MINI_MAP_SCALE + offset.y;
-	if (x >= data->map_size.x || y >= data->map_size.y)
+	if (x >= data->map_size.x || y >= data->map_size.y || y < 0 || x < 0)
 		return (BLACK);
 	if (data->map[(int)y][(int)x] == 1)
 		color = RED;
