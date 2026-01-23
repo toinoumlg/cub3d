@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 09:26:38 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/21 20:00:44 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/23 10:27:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static void	init_raycast_values(t_raycaster *rc, t_player player,
 {
 	rc->map_pos.x = (int)player.pos.x;
 	rc->map_pos.y = (int)player.pos.y;
-	rc->camera.x = 2.0 * rc->x / (double)WINDOW_WIDTH - 1.0;
+	rc->camera.x = 2.0 * rc->x / (double)WINDOW_WIDTH - 1;
 	rc->ray_dir.x = player.dir.x + plane.x * rc->camera.x;
 	rc->ray_dir.y = player.dir.y + plane.y * rc->camera.x;
 	if (rc->ray_dir.x == 0.0)
@@ -98,8 +98,8 @@ static void	set_image_draw_limit(double perp_dist, int *line_height,
 void	raycast(t_cub3d *data)
 {
 	t_raycaster	rc;
-	// int			mini_map_step;
 
+	// int			mini_map_step;
 	rc.x = 0;
 	// mini_map_step = 1;
 	while (rc.x < (int)WINDOW_WIDTH)
