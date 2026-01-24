@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 10:35:10 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/23 13:09:37 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 01:25:38 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ void	plot_line_low(t_vector2 start, t_vector2 end, t_cub3d *data)
 	{
 		if (start.x < data->minimap.w && start.x >= 0
 			&& start.y < data->minimap.h && start.y >= 0)
-			pxl_put(data->minimap, start.x, start.y, BLUE);
+			*(data->minimap.addr + start.x + start.y * (int)WINDOW_WIDTH
+					/ 8) = BLUE;
 		if (d > 0)
 		{
 			start.y += yi;
@@ -103,7 +104,8 @@ void	plot_line_high(t_vector2 start, t_vector2 end, t_cub3d *data)
 	{
 		if (start.x < data->minimap.w && start.x >= 0
 			&& start.y < data->minimap.h && start.y >= 0)
-			pxl_put(data->minimap, start.x, start.y, BLUE);
+			*(data->minimap.addr + start.x + start.y * (int)WINDOW_WIDTH
+					/ 8) = BLUE;
 		if (d > 0)
 		{
 			start.x = start.x + xi;
@@ -115,7 +117,7 @@ void	plot_line_high(t_vector2 start, t_vector2 end, t_cub3d *data)
 	}
 }
 
-void	draw_line_on_map(t_raycaster rc, t_cub3d *data)
+void	draw_lines_on_map(t_raycaster rc, t_cub3d *data)
 {
 	t_vector2	end;
 	t_vector2	start;
@@ -167,7 +169,8 @@ void	draw_player(t_cub3d *data)
 	{
 		x = 0;
 		while (x < 8)
-			pxl_put(data->minimap, player.x + x++, player.y + y, GREEN);
+			*(data->minimap.addr + player.x + x++ + (player.y + y)
+					* (int)WINDOW_WIDTH / 8) = GREEN;
 		y++;
 	}
 }
@@ -175,8 +178,9 @@ void	draw_player(t_cub3d *data)
 void	draw_map(t_cub3d *data)
 {
 	t_double2	offset;
-	int			y;
+	int			color;
 	int			x;
+	int			y;
 
 	y = 0;
 	set_map_offset(&offset, data);
@@ -185,8 +189,8 @@ void	draw_map(t_cub3d *data)
 		x = 0;
 		while (x < data->minimap.w)
 		{
-			pxl_put(data->minimap, x, y, get_minimap_color(data, x, y, offset));
-			x++;
+			color = get_minimap_color(data, x, y, offset);
+			*(data->minimap.addr + x++ + y * (int)WINDOW_WIDTH / 8) = color;
 		}
 		y++;
 	}

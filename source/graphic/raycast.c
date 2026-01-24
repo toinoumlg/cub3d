@@ -6,11 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 09:26:38 by amalangu          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2026/01/23 14:31:48 by amalangu         ###   ########.fr       */
-=======
-/*   Updated: 2026/01/23 23:41:13 by amalangu         ###   ########.fr       */
->>>>>>> origin/main
+/*   Updated: 2026/01/24 01:27:34 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +71,8 @@ static void	process_texture_coords(t_raycaster *rc, t_double2 player_pos,
 		rc->text_coord.x = rc->text->w - rc->text_coord.x - 1;
 }
 
-void	raycast(int **map, t_player *player, t_img *textures, t_pxl *buffer)
+void	raycast(int **map, t_player *player, t_img *textures, t_pxl *buffer,
+		t_cub3d *data)
 {
 	int			x;
 	t_raycaster	rc;
@@ -86,6 +83,7 @@ void	raycast(int **map, t_player *player, t_img *textures, t_pxl *buffer)
 		init_raycast(&rc, player, x);
 		find_perp_dist(map, player->pos, &rc);
 		set_draw_limit(&rc, player);
+		draw_lines_on_map(rc, data);
 		process_texture_coords(&rc, player->pos, textures);
 		draw_vertical_line(x++, buffer, &rc);
 	}

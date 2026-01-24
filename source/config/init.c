@@ -6,11 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:46:30 by amalangu          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2026/01/21 10:57:26 by amalangu         ###   ########.fr       */
-=======
-/*   Updated: 2026/01/23 22:11:43 by amalangu         ###   ########.fr       */
->>>>>>> origin/main
+/*   Updated: 2026/01/24 01:20:17 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +30,25 @@ int	*copy_line(char *str, int len)
 	return (row);
 }
 
+t_img	new_img(int widht, int height, t_cub3d *data)
+{
+	t_img	img;
+
+	img.w = widht;
+	img.h = height;
+	img.ptr = mlx_new_image(data->mlx, widht, height);
+	if (!img.ptr)
+		exit_error("Initializing image", data);
+	img.addr = (t_pxl *)mlx_get_data_addr(img.ptr, &img.bpp, &img.lenght,
+			&img.end);
+	if (!img.addr)
+	{
+		mlx_destroy_image(data->mlx, img.ptr);
+		exit_error("Getting image address", data);
+	}
+	return (img);
+}
+
 void	init_mlx(t_cub3d *data)
 {
 	data->mlx = mlx_init();
@@ -43,15 +58,8 @@ void	init_mlx(t_cub3d *data)
 			WINDOW_NAME);
 	if (!data->window)
 		exit_error("Failed to open new window", data);
-	data->buffer.ptr = mlx_new_image(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
-	if (!data->buffer.ptr)
-		exit_error("Initializing buffer image", data);
-	data->buffer.addr = (t_pxl *)mlx_get_data_addr(data->buffer.ptr,
-			&data->buffer.bpp, &data->buffer.lenght, &data->buffer.end);
-	if (!data->buffer.addr)
-		exit_error("Getting buffer image address", data);
-	data->buffer.w = WINDOW_WIDTH;
-	data->buffer.h = WINDOW_HEIGHT;
+	data->buffer = new_img(WINDOW_WIDTH, WINDOW_HEIGHT, data);
+	data->minimap = new_img(WINDOW_WIDTH / 8, WINDOW_WIDTH / 8, data);
 }
 
 void	init_cub3d(t_cub3d *data, int ac, char *file)

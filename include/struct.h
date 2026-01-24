@@ -6,11 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2026/01/23 14:17:19 by amalangu         ###   ########.fr       */
-=======
-/*   Updated: 2026/01/23 23:38:22 by amalangu         ###   ########.fr       */
->>>>>>> origin/main
+/*   Updated: 2026/01/24 01:12:55 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +22,7 @@
 #  define WINDOW_HEIGHT 1080.0f
 #  define WINDOW_NAME "cub3d"
 #  define FOV 70.0f
+#  define MINI_MAP_SCALE 32
 # endif
 
 typedef unsigned int	t_pxl;
@@ -108,6 +105,7 @@ typedef struct s_cub3d
 	int					ceiling;
 	t_img				textures[4];
 	t_img				buffer;
+	t_img				minimap;
 	t_timer				timer;
 	t_player			player;
 }						t_cub3d;
