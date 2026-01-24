@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 09:50:31 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:03:06 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 02:30:25 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	map_line(char *line)
 	return (1);
 }
 
-void	get_map_size(char **config, t_vector2 *map_size)
+void	get_size(char **config, t_vector2 *size)
 {
 	int	tmp;
 
@@ -44,9 +44,9 @@ void	get_map_size(char **config, t_vector2 *map_size)
 		if (!map_line(*config) || **config == '\n')
 			break ;
 		tmp = ft_strlen_with_tab(*config);
-		if (tmp > map_size->x)
-			map_size->x = tmp;
-		map_size->y++;
+		if (tmp > size->x)
+			size->x = tmp;
+		size->y++;
 		config++;
 	}
 }
@@ -97,15 +97,15 @@ void	copy_map(char **config, t_cub3d *data)
 	int	i;
 
 	i = 0;
-	get_map_size(config, &data->map_size);
-	if (data->map_size.x < 3 || data->map_size.y < 3)
+	get_size(config, &data->minimap.size);
+	if (data->minimap.size.x < 3 || data->minimap.size.y < 3)
 		exit_error("Map is too small", data);
 	alloc_map(data);
 	while (*config)
 	{
 		if (**config == '\n')
 			break ;
-		copy_map_row(*config++, data->map[i++], data);
+		copy_map_row(*config++, data->minimap.array[i++], data);
 	}
 	check_remaining_lines(config, data);
 }

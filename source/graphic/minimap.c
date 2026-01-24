@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 10:35:10 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:25:38 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 02:30:44 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,48 +14,32 @@
 #include "graphic.h"
 #include "struct.h"
 
-static void	set_map_offset(t_double2 *offset, t_cub3d *data)
-{
-	t_double2	visible_square;
-
-	visible_square = set_double2((float)data->minimap.w / MINI_MAP_SCALE,
-			(float)data->minimap.h / MINI_MAP_SCALE);
-	if (visible_square.x < 1)
-		visible_square.x = 1;
-	if (visible_square.y < 1)
-		visible_square.y = 1;
-	offset->x = data->player.pos.x - (visible_square.x / 2);
-	offset->y = data->player.pos.y - (visible_square.y / 2);
-}
-
-void	set_minimap_max_value(t_vector2 *hit_minimap, t_cub3d *data)
+void	set_minimap_max_value(t_vector2 *hit_minimap, t_minimap *minimap)
 {
 	if (hit_minimap->x < 0)
 		hit_minimap->x = 0;
-	if (hit_minimap->x >= data->minimap.w)
-		hit_minimap->x = data->minimap.w - 1;
+	if (hit_minimap->x >= minimap->buffer.w)
+		hit_minimap->x = minimap->buffer.w - 1;
 	if (hit_minimap->y < 0)
 		hit_minimap->y = 0;
-	if (hit_minimap->y >= data->minimap.h)
-		hit_minimap->y = data->minimap.h - 1;
+	if (hit_minimap->y >= minimap->buffer.h)
+		hit_minimap->y = minimap->buffer.h - 1;
 }
 
-static t_vector2	get_hit_pos_on_minimap(t_raycaster rc, t_double2 player_pos,
-		t_cub3d *data)
+static t_vector2	get_hit_pos_on_minimap(t_raycaster *rc,
+		t_double2 *player_pos, t_minimap *minimap)
 {
 	t_double2	hit_map;
-	t_double2	offset;
 	t_vector2	hit_minimap;
 
-	set_map_offset(&offset, data);
-	hit_map.x = player_pos.x + rc.perp_dist * rc.ray_dir.x;
-	hit_map.y = player_pos.y + rc.perp_dist * rc.ray_dir.y;
-	hit_minimap.x = (hit_map.x - offset.x) * MINI_MAP_SCALE;
-	hit_minimap.y = (hit_map.y - offset.y) * MINI_MAP_SCALE;
+	hit_map.x = player_pos->x + rc->perp_dist * rc->ray_dir.x;
+	hit_map.y = player_pos->y + rc->perp_dist * rc->ray_dir.y;
+	hit_minimap.x = (hit_map.x - minimap->offset.x) * MINI_MAP_SCALE;
+	hit_minimap.y = (hit_map.y - minimap->offset.y) * MINI_MAP_SCALE;
 	return (hit_minimap);
 }
 
-void	plot_line_low(t_vector2 start, t_vector2 end, t_cub3d *data)
+void	plot_line_low(t_vector2 start, t_vector2 end, t_minimap *minimap)
 {
 	t_vector2	delta;
 	int			yi;
@@ -71,9 +55,9 @@ void	plot_line_low(t_vector2 start, t_vector2 end, t_cub3d *data)
 	d = (2 * delta.y) - delta.x;
 	while (start.x <= end.x)
 	{
-		if (start.x < data->minimap.w && start.x >= 0
-			&& start.y < data->minimap.h && start.y >= 0)
-			*(data->minimap.addr + start.x + start.y * (int)WINDOW_WIDTH
+		if (start.x < minimap->buffer.w && start.x >= 0
+			&& start.y < minimap->buffer.h && start.y >= 0)
+			*(minimap->buffer.addr + start.x + start.y * (int)WINDOW_WIDTH
 					/ 8) = BLUE;
 		if (d > 0)
 		{
@@ -86,7 +70,7 @@ void	plot_line_low(t_vector2 start, t_vector2 end, t_cub3d *data)
 	}
 }
 
-void	plot_line_high(t_vector2 start, t_vector2 end, t_cub3d *data)
+void	plot_line_high(t_vector2 start, t_vector2 end, t_minimap *minimap)
 {
 	t_vector2	delta;
 	int			xi;
@@ -102,9 +86,9 @@ void	plot_line_high(t_vector2 start, t_vector2 end, t_cub3d *data)
 	d = (2 * delta.x) - delta.y;
 	while (start.y <= end.y)
 	{
-		if (start.x < data->minimap.w && start.x >= 0
-			&& start.y < data->minimap.h && start.y >= 0)
-			*(data->minimap.addr + start.x + start.y * (int)WINDOW_WIDTH
+		if (start.x < minimap->buffer.w && start.x >= 0
+			&& start.y < minimap->buffer.h && start.y >= 0)
+			*(minimap->buffer.addr + start.x + start.y * (int)WINDOW_WIDTH
 					/ 8) = BLUE;
 		if (d > 0)
 		{
@@ -117,82 +101,82 @@ void	plot_line_high(t_vector2 start, t_vector2 end, t_cub3d *data)
 	}
 }
 
-void	draw_lines_on_map(t_raycaster rc, t_cub3d *data)
+void	draw_lines_on_map(t_raycaster *rc, t_minimap *minimap,
+		t_double2 *player_pos)
 {
 	t_vector2	end;
 	t_vector2	start;
 
-	start = set_vector2(data->minimap.w / 2, data->minimap.h / 2);
-	end = get_hit_pos_on_minimap(rc, data->player.pos, data);
+	start = set_vector2(minimap->buffer.w / 2, minimap->buffer.h / 2);
+	end = get_hit_pos_on_minimap(rc, player_pos, minimap);
 	if (ft_abs(end.y - start.y) < ft_abs(end.x - start.x))
 	{
 		if (start.x > end.x)
-			plot_line_low(end, start, data);
+			plot_line_low(end, start, minimap);
 		else
-			plot_line_low(start, end, data);
+			plot_line_low(start, end, minimap);
 	}
 	else
 	{
 		if (start.y > end.y)
-			plot_line_high(end, start, data);
+			plot_line_high(end, start, minimap);
 		else
-			plot_line_high(start, end, data);
+			plot_line_high(start, end, minimap);
 	}
 }
 
-int	get_minimap_color(t_cub3d *data, float x, float y, t_double2 offset)
+int	get_minimap_color(int **array, t_vector2 *coords, t_vector2 *size,
+		t_double2 *offset)
 {
-	int	color;
+	int		color;
+	float	x;
+	float	y;
 
-	x = x / MINI_MAP_SCALE + offset.x;
-	y = y / MINI_MAP_SCALE + offset.y;
-	if (x >= data->map_size.x || y >= data->map_size.y || y < 0 || x < 0)
+	x = (float)coords->x / MINI_MAP_SCALE + offset->x;
+	y = (float)coords->y / MINI_MAP_SCALE + offset->y;
+	if (x >= size->x || y >= size->y || y < 0 || x < 0)
 		return (BLACK);
-	if (data->map[(int)y][(int)x] == 1)
+	if (array[(int)y][(int)x] == 1)
 		color = RED;
-	else if (data->map[(int)y][(int)x] == 0)
+	else if (array[(int)y][(int)x] == 0)
 		color = WHITE;
 	else
 		color = BLUE;
 	return (color);
 }
 
-void	draw_player(t_cub3d *data)
+void	draw_player(t_minimap *minimap)
 {
-	t_vector2	player;
-	int			y;
-	int			x;
+	int	y;
+	int	x;
 
-	player = set_vector2(data->minimap.w / 2 - 4, data->minimap.h / 2 - 4);
 	y = 0;
 	while (y < 8)
 	{
 		x = 0;
 		while (x < 8)
-			*(data->minimap.addr + player.x + x++ + (player.y + y)
-					* (int)WINDOW_WIDTH / 8) = GREEN;
+			*(minimap->buffer.addr + minimap->player.x + x++
+					+ (minimap->player.y + y) * (int)WINDOW_WIDTH / 8) = GREEN;
 		y++;
 	}
 }
 
-void	draw_map(t_cub3d *data)
+void	draw_minimap(t_minimap *minimap)
 {
-	t_double2	offset;
 	int			color;
-	int			x;
-	int			y;
+	t_vector2	coords;
 
-	y = 0;
-	set_map_offset(&offset, data);
-	while (y < data->minimap.h)
+	coords.y = 0;
+	while (coords.y < minimap->buffer.h)
 	{
-		x = 0;
-		while (x < data->minimap.w)
+		coords.x = 0;
+		while (coords.x < minimap->buffer.w)
 		{
-			color = get_minimap_color(data, x, y, offset);
-			*(data->minimap.addr + x++ + y * (int)WINDOW_WIDTH / 8) = color;
+			color = get_minimap_color(minimap->array, &coords, &minimap->size,
+					&minimap->offset);
+			*(minimap->buffer.addr + coords.x++ + coords.y * (int)WINDOW_WIDTH
+					/ 8) = color;
 		}
-		y++;
+		coords.y++;
 	}
-	draw_player(data);
 }

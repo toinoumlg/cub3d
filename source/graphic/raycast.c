@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 09:26:38 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:27:34 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 02:30:44 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,16 @@ t_img	*find_texture(int side, t_double2 ray_dir, t_img *textures)
 		return (&textures[0]);
 }
 
-static void	process_texture_coords(t_raycaster *rc, t_double2 player_pos,
+static void	process_texture_coords(t_raycaster *rc, t_double2 *player_pos,
 		t_img *textures)
 {
 	double	wall_x;
 
 	rc->text = find_texture(rc->side, rc->ray_dir, textures);
 	if (!rc->side)
-		wall_x = player_pos.y + rc->perp_dist * rc->ray_dir.y;
+		wall_x = player_pos->y + rc->perp_dist * rc->ray_dir.y;
 	else
-		wall_x = player_pos.x + rc->perp_dist * rc->ray_dir.x;
+		wall_x = player_pos->x + rc->perp_dist * rc->ray_dir.x;
 	wall_x -= floor(wall_x);
 	rc->text_coord.x = wall_x * rc->text->w;
 	rc->step = 1.0 * rc->text->w / rc->line_height;
@@ -71,8 +71,8 @@ static void	process_texture_coords(t_raycaster *rc, t_double2 player_pos,
 		rc->text_coord.x = rc->text->w - rc->text_coord.x - 1;
 }
 
-void	raycast(int **map, t_player *player, t_img *textures, t_pxl *buffer,
-		t_cub3d *data)
+void	raycast(t_minimap *minimap, t_player *player, t_img *textures,
+		t_pxl *buffer)
 {
 	int			x;
 	t_raycaster	rc;
@@ -81,10 +81,10 @@ void	raycast(int **map, t_player *player, t_img *textures, t_pxl *buffer,
 	while (x < WINDOW_WIDTH)
 	{
 		init_raycast(&rc, player, x);
-		find_perp_dist(map, player->pos, &rc);
+		find_perp_dist(minimap->array, player->pos, &rc);
 		set_draw_limit(&rc, player);
-		draw_lines_on_map(rc, data);
-		process_texture_coords(&rc, player->pos, textures);
+		draw_lines_on_map(&rc, minimap, &player->pos);
+		process_texture_coords(&rc, &player->pos, textures);
 		draw_vertical_line(x++, buffer, &rc);
 	}
 }

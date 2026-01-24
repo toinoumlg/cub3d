@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 13:43:50 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:02:40 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 02:30:25 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void	free_mlx(t_cub3d *data)
 int	free_cub3d(t_cub3d *data)
 {
 	free_mlx(data);
-	free_map(data->map, data->map_size.y);
+	free_map(data->minimap.array, data->minimap.size.y);
 	free_config(data->config);
 	ft_close(&data->fd);
 	return (1);

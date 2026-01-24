@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:46:30 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:20:17 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 02:19:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,13 @@ void	init_mlx(t_cub3d *data)
 	data->mlx = mlx_init();
 	if (!data->mlx)
 		exit_error("Failed to initialize minilibx", data);
-	data->window = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT,
-			WINDOW_NAME);
-	if (!data->window)
-		exit_error("Failed to open new window", data);
 	data->buffer = new_img(WINDOW_WIDTH, WINDOW_HEIGHT, data);
-	data->minimap = new_img(WINDOW_WIDTH / 8, WINDOW_WIDTH / 8, data);
+	data->minimap.buffer = new_img(WINDOW_WIDTH / 8, WINDOW_WIDTH / 8, data);
+	data->minimap.visible_square = set_double2((float)data->minimap.buffer.w
+			/ MINI_MAP_SCALE / 2, (float)data->minimap.buffer.h / MINI_MAP_SCALE
+			/ 2);
+	data->minimap.player = set_vector2(data->minimap.buffer.w / 2 - 4,
+			data->minimap.buffer.h / 2 - 4);
 }
 
 void	init_cub3d(t_cub3d *data, int ac, char *file)
@@ -74,4 +75,8 @@ void	init_cub3d(t_cub3d *data, int ac, char *file)
 	copy_config(size, file, data);
 	parse_config(data);
 	set_timer(data);
+	data->window = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT,
+			WINDOW_NAME);
+	if (!data->window)
+		exit_error("Failed to open new window", data);
 }

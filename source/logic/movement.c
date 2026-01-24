@@ -6,10 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 12:26:41 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:03:02 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 02:30:25 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "cub_utils.h"
+#include "graphic.h"
 #include "struct.h"
 
 void	rotate(t_double2 *dir, t_double2 *plane, float direction, double d_time)
@@ -29,9 +31,9 @@ void	rotate(t_double2 *dir, t_double2 *plane, float direction, double d_time)
 			* d_time);
 }
 
-static int	is_walkable(int **map, t_vector2 map_size, int x, int y)
+static int	is_walkable(int **map, t_vector2 size, int x, int y)
 {
-	if (x < 0 || y < 0 || x >= map_size.x || y >= map_size.y)
+	if (x < 0 || y < 0 || x >= size.x || y >= size.y)
 		return (0);
 	return (map[y][x] == 0);
 }
@@ -44,9 +46,11 @@ void	move(t_double2 *dir, t_cub3d *data, int direction)
 	old_pos = &data->player.pos;
 	new_pos.x = old_pos->x + dir->x * (direction * data->timer.delta_time);
 	new_pos.y = old_pos->y + dir->y * (direction * data->timer.delta_time);
-	if (is_walkable(data->map, data->map_size, (int)old_pos->x, (int)new_pos.y))
+	if (is_walkable(data->minimap.array, data->minimap.size, (int)old_pos->x,
+			(int)new_pos.y))
 		old_pos->y = new_pos.y;
-	if (is_walkable(data->map, data->map_size, (int)new_pos.x, (int)old_pos->y))
+	if (is_walkable(data->minimap.array, data->minimap.size, (int)new_pos.x,
+			(int)old_pos->y))
 		old_pos->x = new_pos.x;
 }
 
@@ -66,4 +70,8 @@ void	apply_motion(t_cub3d *data)
 		move(&data->player.plane, data, 2);
 	if (data->player.inputs.a)
 		move(&data->player.plane, data, -2);
+	data->minimap.offset.x = data->player.pos.x
+		- data->minimap.visible_square.x;
+	data->minimap.offset.y = data->player.pos.y
+		- data->minimap.visible_square.y;
 }

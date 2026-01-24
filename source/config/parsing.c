@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 11:03:13 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:03:23 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 02:30:25 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,17 @@ void	set_dir(int direction, t_player *player, double pi)
 		return ;
 }
 
-static t_vector2	find_player(int **map, t_vector2 map_size, t_cub3d *data)
+static t_vector2	find_player(int **map, t_vector2 size, t_cub3d *data)
 {
 	t_vector2	i;
 	t_vector2	pos;
 
 	pos = set_vector2(-1, -1);
 	i = set_vector2(0, 0);
-	while (i.y < map_size.y)
+	while (i.y < size.y)
 	{
 		i.x = 0;
-		while (i.x < map_size.x)
+		while (i.x < size.x)
 		{
 			if (map[i.y][i.x] == 'N' || map[i.y][i.x] == 'E'
 				|| map[i.y][i.x] == 'S' || map[i.y][i.x] == 'W')
@@ -65,7 +65,7 @@ static float	get_plane_lenght(double pi)
 	return (tanf(deg_to_rad / 2.0f));
 }
 
-void	set_player(int **map, t_vector2 map_size, t_cub3d *data)
+void	set_player(int **map, t_vector2 size, t_cub3d *data)
 {
 	t_vector2	coords;
 	float		plane_lenght;
@@ -73,7 +73,7 @@ void	set_player(int **map, t_vector2 map_size, t_cub3d *data)
 
 	pi = acos(-1.0);
 	plane_lenght = get_plane_lenght(pi);
-	coords = find_player(map, map_size, data);
+	coords = find_player(map, size, data);
 	data->player.dir = set_double2(0, -1.0);
 	data->player.plane = set_double2(plane_lenght, 0.0);
 	set_dir(map[coords.y][coords.x], &data->player, pi);
@@ -90,7 +90,8 @@ void	parse_config(t_cub3d *data)
 	data->textures[2] = init_texture_from_config("NO ", data);
 	data->textures[3] = init_texture_from_config("EA ", data);
 	load_map(data->config, data);
-	set_player(data->map, data->map_size, data);
-	flood_fill(data->player.pos.x, data->player.pos.y, data->map_size, data);
-	restore_map(data->map, data->map_size);
+	set_player(data->minimap.array, data->minimap.size, data);
+	flood_fill(data->player.pos.x, data->player.pos.y, data->minimap.size,
+		data);
+	restore_map(data->minimap.array, data->minimap.size);
 }

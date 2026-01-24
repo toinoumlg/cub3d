@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:50:30 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:55:53 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 02:30:25 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,20 @@ void	alloc_map(t_cub3d *data)
 {
 	int	i;
 
-	data->map = malloc(sizeof(int *) * data->map_size.y);
-	if (!data->map)
+	data->minimap.array = malloc(sizeof(int *) * data->minimap.size.y);
+	if (!data->minimap.array)
 		exit_error("Allocation failed during alloc_map", data);
 	i = 0;
-	while (i < data->map_size.y)
+	while (i < data->minimap.size.y)
 	{
-		data->map[i] = malloc(sizeof(int) * data->map_size.x);
-		if (!data->map[i])
+		data->minimap.array[i] = malloc(sizeof(int) * data->minimap.size.x);
+		if (!data->minimap.array[i])
 		{
-			data->map_size.y = i;
+			data->minimap.size.y = i;
 			exit_error("Allocation failed during alloc_map", data);
 		}
-		ft_memset(data->map[i++], -1, sizeof(int) * data->map_size.x);
+		ft_memset(data->minimap.array[i++], -1, sizeof(int)
+			* data->minimap.size.x);
 	}
 }
 

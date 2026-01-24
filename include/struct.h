@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:12:55 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 02:30:31 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,21 +93,29 @@ typedef struct s_raycaster
 	double				step;
 }						t_raycaster;
 
+typedef struct s_minimap
+{
+	t_img				buffer;
+	int					**array;
+	t_vector2			size;
+	t_double2			offset;
+	t_double2			visible_square;
+	t_vector2			player;
+}						t_minimap;
+
 typedef struct s_cub3d
 {
 	int					fd;
 	void				*mlx;
-	int					**map;
 	char				**config;
-	t_vector2			map_size;
 	void				*window;
 	int					floor;
 	int					ceiling;
 	t_img				textures[4];
 	t_img				buffer;
-	t_img				minimap;
 	t_timer				timer;
 	t_player			player;
+	t_minimap			minimap;
 }						t_cub3d;
 
 #endif
