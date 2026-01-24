@@ -10,7 +10,7 @@ LIBFT_DIR = libft
 SOURCE_DIR = source
 SOURCES_MAIN = main \
 	utils/utils utils/free utils/timer \
-	graphic/raycast graphic/draw graphic/utils graphic/dda graphic/minimap \
+	graphic/raycast graphic/draw graphic/utils graphic/dda graphic/minimap  \
 	logic/movement  logic/loop logic/key_handler \
 	config/flood_fill config/map config/init \
 	config/texture config/parsing config/utils \
