@@ -6,7 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 12:26:41 by amalangu          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2026/01/20 14:25:30 by amalangu         ###   ########.fr       */
+=======
+/*   Updated: 2026/01/23 23:43:11 by amalangu         ###   ########.fr       */
+>>>>>>> origin/main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +52,22 @@ void	move(t_double2 *dir, t_cub3d *data, int direction)
 		old_pos->y = new_pos.y;
 	if (is_walkable(data->map, data->map_size, (int)new_pos.x, (int)old_pos->y))
 		old_pos->x = new_pos.x;
+}
+
+void	apply_motion(t_cub3d *data)
+{
+	if (data->player.inputs.right)
+		rotate(&data->player.dir, &data->player.plane, 2,
+			data->timer.delta_time);
+	if (data->player.inputs.left)
+		rotate(&data->player.dir, &data->player.plane, -2,
+			data->timer.delta_time);
+	if (data->player.inputs.w)
+		move(&data->player.dir, data, 2);
+	if (data->player.inputs.s)
+		move(&data->player.dir, data, -2);
+	if (data->player.inputs.d)
+		move(&data->player.plane, data, 2);
+	if (data->player.inputs.a)
+		move(&data->player.plane, data, -2);
 }

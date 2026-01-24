@@ -6,7 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2026/01/23 14:17:19 by amalangu         ###   ########.fr       */
+=======
+/*   Updated: 2026/01/23 23:38:22 by amalangu         ###   ########.fr       */
+>>>>>>> origin/main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +25,21 @@
 #  define WINDOW_WIDTH 1920.0f
 #  define WINDOW_HEIGHT 1080.0f
 #  define WINDOW_NAME "cub3d"
-#  define MINI_MAP_SCALE 32
+#  define FOV 70.0f
 # endif
 
-typedef unsigned char	t_pxl[4];
+typedef unsigned int	t_pxl;
+
+typedef struct s_input
+{
+	int					w;
+	int					a;
+	int					s;
+	int					d;
+	int					left;
+	int					right;
+	int					zoom;
+}						t_input;
 
 typedef struct s_double2
 {
@@ -49,35 +64,36 @@ typedef struct s_timer
 typedef struct s_img
 {
 	void				*ptr;
-	char				*addr;
+	t_pxl				*addr;
 	int					bpp;
 	int					lenght;
+	int					end;
 	int					w;
 	int					h;
-	int					end;
 }						t_img;
 
 typedef struct s_player
 {
 	t_double2			pos;
 	t_double2			dir;
+	t_double2			plane;
+	int					zoom;
+	t_input				inputs;
 }						t_player;
 
 typedef struct s_raycaster
 {
-	t_double2			ray_dir;
+	t_img				*text;
 	t_double2			d_dist;
 	t_double2			s_dist;
-	t_double2			texture;
+	t_double2			ray_dir;
+	t_double2			text_coord;
 	t_vector2			draw_limit;
-	t_vector2			map_pos;
-	t_vector2			step;
-	int					x;
+	int					line_height;
+	float				camera_x;
 	int					side;
-	float				line_height;
 	double				perp_dist;
-	double				wall_x;
-	double				texture_step;
+	double				step;
 }						t_raycaster;
 
 typedef struct s_cub3d
@@ -92,9 +108,7 @@ typedef struct s_cub3d
 	int					ceiling;
 	t_img				textures[4];
 	t_img				buffer;
-	t_img				minimap;
 	t_timer				timer;
-	t_double2			plane;
 	t_player			player;
 }						t_cub3d;
 

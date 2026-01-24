@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 13:49:19 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/23 14:08:42 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 00:49:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,7 @@
 #include "logic.h"
 #include "struct.h"
 #include "swap.h"
-#include <X11/keysym.h>
 #include <stdlib.h>
-
-static int	handle_keys(int key_stroked, t_cub3d *data)
-{
-	if (key_stroked == 65307)
-		return (mlx_loop_end(data->mlx), 0);
-	if (key_stroked == XK_Right)
-		rotate(&data->player.dir, &data->plane, 1, data->timer.delta_time);
-	if (key_stroked == XK_Left)
-		rotate(&data->player.dir, &data->plane, -1, data->timer.delta_time);
-	if (key_stroked == XK_w)
-		move(&data->player.dir, data, 2);
-	if (key_stroked == XK_s)
-		move(&data->player.dir, data, -2);
-	if (key_stroked == XK_d)
-		move(&data->plane, data, 2);
-	if (key_stroked == XK_a)
-		move(&data->plane, data, -2);
-	return (0);
-}
 
 static int	on_destroy(t_cub3d *data)
 {
@@ -58,20 +38,20 @@ static void	fps_counter(t_cub3d *data)
 static int	update(t_cub3d *data)
 {
 	get_current_time(data);
-	clear_image(data);
-	draw_map(data);
-	raycast(data);
+	clear_image(data->buffer.addr, data->floor, data->ceiling);
+	apply_motion(data);
+	raycast(data->map, &data->player, data->textures, data->buffer.addr);
 	mlx_put_image_to_window(data->mlx, data->window, data->buffer.ptr, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->window, data->minimap.ptr, 20, 20);
 	fps_counter(data);
-	mlx_do_sync(data->mlx);
+	// mlx_do_sync(data->mlx);
 	return (0);
 }
 
 void	loop(t_cub3d *data)
 {
 	mlx_hook(data->window, 17, 0, on_destroy, data);
-	mlx_hook(data->window, 2, (1L << 0), handle_keys, data);
+	mlx_hook(data->window, 2, (1L << 0), key_pressed, data);
+	mlx_hook(data->window, 3, (1L << 1), key_released, data);
 	mlx_loop_hook(data->mlx, update, data);
 	mlx_loop(data->mlx);
 }

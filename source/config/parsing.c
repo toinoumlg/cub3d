@@ -6,7 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 11:03:13 by amalangu          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2026/01/23 15:10:07 by amalangu         ###   ########.fr       */
+=======
+/*   Updated: 2026/01/24 00:16:26 by amalangu         ###   ########.fr       */
+>>>>>>> origin/main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,50 +21,66 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void	set_dir(int direction, t_double2 *dir, t_double2 *plane)
+void	set_dir(int direction, t_player *player, double pi)
 {
-	double	pi;
-
-	pi = acos(-1.0);
 	if (direction == 'W')
-		return (rotate(dir, plane, 3 * pi / 2.0, 1));
+		return (rotate(&player->dir, &player->plane, 3 * pi / 2.0, 1));
 	else if (direction == 'E')
-		return (rotate(dir, plane, pi / 2.0, 1));
+		return (rotate(&player->dir, &player->plane, pi / 2.0, 1));
 	else if (direction == 'S')
-		return (rotate(dir, plane, pi, 1));
+		return (rotate(&player->dir, &player->plane, pi, 1));
 	else
 		return ;
 }
 
 static t_vector2	find_player(int **map, t_vector2 map_size, t_cub3d *data)
 {
-	t_vector2	new;
+	t_vector2	i;
+	t_vector2	pos;
 
-	new = set_vector2(0, 0);
-	while (new.y < map_size.y)
+	pos = set_vector2(-1, -1);
+	i = set_vector2(0, 0);
+	while (i.y < map_size.y)
 	{
-		new.x = 0;
-		while (new.x < map_size.x)
+		i.x = 0;
+		while (i.x < map_size.x)
 		{
-			if (map[new.y][new.x] == 'N' || map[new.y][new.x] == 'E'
-				|| map[new.y][new.x] == 'S' || map[new.y][new.x] == 'W')
-				return (new);
-			new.x++;
+			if (map[i.y][i.x] == 'N' || map[i.y][i.x] == 'E'
+				|| map[i.y][i.x] == 'S' || map[i.y][i.x] == 'W')
+			{
+				if (pos.y > 0 || pos.x > 0)
+					exit_error("Multiple starting position", data);
+				pos = i;
+			}
+			i.x++;
 		}
-		new.y++;
+		i.y++;
 	}
-	exit_error("No player position on map", data);
-	return (new);
+	if (pos.x < 0 || pos.y < 0)
+		exit_error("No player position on map", data);
+	return (pos);
+}
+
+static float	get_plane_lenght(double pi)
+{
+	float	deg_to_rad;
+
+	deg_to_rad = FOV * pi / 180.0f;
+	return (tanf(deg_to_rad / 2.0f));
 }
 
 void	set_player(int **map, t_vector2 map_size, t_cub3d *data)
 {
 	t_vector2	coords;
+	float		plane_lenght;
+	double		pi;
 
+	pi = acos(-1.0);
+	plane_lenght = get_plane_lenght(pi);
 	coords = find_player(map, map_size, data);
-	data->player.dir = set_double2(0, -1);
-	data->plane = set_double2(0.66, 0);
-	set_dir(map[coords.y][coords.x], &data->player.dir, &data->plane);
+	data->player.dir = set_double2(0, -1.0);
+	data->player.plane = set_double2(plane_lenght, 0.0);
+	set_dir(map[coords.y][coords.x], &data->player, pi);
 	data->player.pos = set_double2(coords.x + 0.5, coords.y + 0.5);
 	map[coords.y][coords.x] = 0;
 }

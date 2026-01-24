@@ -6,7 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 14:04:09 by amalangu          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2026/01/20 14:53:43 by amalangu         ###   ########.fr       */
+=======
+/*   Updated: 2026/01/24 00:14:41 by amalangu         ###   ########.fr       */
+>>>>>>> origin/main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +90,10 @@ void	copy_config(int size, char *file, t_cub3d *data)
 	char	*tmp;
 
 	i = 0;
-	data->fd = open(file, O_RDONLY);
 	allocate_config(size, data);
+	data->fd = open(file, O_RDONLY);
+	if (data->fd < 0)
+		exit_error("Failed to open config file", data);
 	while (i < size)
 	{
 		tmp = get_next_line(data->fd);
@@ -95,13 +101,12 @@ void	copy_config(int size, char *file, t_cub3d *data)
 			exit_error("Allocation failed during config copy", data);
 		if (*tmp == '\n')
 		{
-			free(tmp);
-			size--;
+			data->config[i++] = tmp;
 			continue ;
 		}
 		data->config[i] = ft_strtrim(tmp, "\n");
 		free(tmp);
 		if (!data->config[i++])
-			exit_error("Allocation failed during config copy", data);
+			exit_error("Allocation failed during trim of config", data);
 	}
 }

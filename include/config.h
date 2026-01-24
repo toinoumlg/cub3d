@@ -6,16 +6,17 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 14:03:34 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/20 14:55:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 00:56:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef CONFIG_H
 # define CONFIG_H
 
 # include "struct.h"
 
-void	init_cub3d(t_cub3d *data, int ac, char **av);
+void	init_cub3d(t_cub3d *data, int ac, char *file);
 t_img	init_texture_from_config(char *to_find, t_cub3d *data);
 int		set_color_from_config(char *to_find, char **config, t_cub3d *data);
 void	copy_config(int size, char *file, t_cub3d *data);
