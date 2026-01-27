@@ -2,6 +2,8 @@ NO ./textures/mossy.xpm
 SO ./textures/greystone.xpm
 WE ./textures/redbrick.xpm
 EA ./textures/colorstone.xpm
+CE ./textures/wood.xpm
+FO ./textures/bluestone.xpm
 
 F 220,100,0
 C 225,30,0

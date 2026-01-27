@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 11:03:13 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 02:30:25 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 13:29:22 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ void	parse_config(t_cub3d *data)
 	data->textures[1] = init_texture_from_config("WE ", data);
 	data->textures[2] = init_texture_from_config("NO ", data);
 	data->textures[3] = init_texture_from_config("EA ", data);
+	data->textures[4] = init_texture_from_config("FO ", data);
+	data->textures[5] = init_texture_from_config("CE ", data);
 	load_map(data->config, data);
 	set_player(data->minimap.array, data->minimap.size, data);
 	flood_fill(data->player.pos.x, data->player.pos.y, data->minimap.size,

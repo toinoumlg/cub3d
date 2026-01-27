@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 12:56:37 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 14:32:46 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,13 +84,15 @@ typedef struct s_raycaster
 	t_double2			d_dist;
 	t_double2			s_dist;
 	t_double2			ray_dir;
+	t_vector2 			ray_pos;
 	t_double2			text_coord;
 	t_vector2			draw_limit;
 	int					line_height;
-	float				camera_x;
+	double				camera_x;
 	int					side;
 	double				perp_dist;
 	double				step;
+	double				wall_x;
 }						t_raycaster;
 
 typedef struct s_minimap
@@ -111,7 +113,7 @@ typedef struct s_cub3d
 	void				*window;
 	int					floor;
 	int					ceiling;
-	t_img				textures[4];
+	t_img				textures[6];
 	t_img				buffer;
 	t_timer				timer;
 	t_player			player;

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 21:58:26 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 00:12:47 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 14:33:11 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static t_double2	find_s_dist(t_double2 player_pos, t_double2 ray_dir,
 	return (s_dist);
 }
 
-static int	perfom_dda(int **map, t_double2 player_pos, t_vector2 step,
+static int	perfom_dda(int **map, t_vector2 *ray_pos, t_vector2 step,
 		t_raycaster *rc)
 {
 	int	side;
@@ -53,16 +53,16 @@ static int	perfom_dda(int **map, t_double2 player_pos, t_vector2 step,
 		if (rc->s_dist.x < rc->s_dist.y)
 		{
 			rc->s_dist.x += rc->d_dist.x;
-			player_pos.x += step.x;
+			ray_pos->x += step.x;
 			side = 0;
 		}
 		else
 		{
 			rc->s_dist.y += rc->d_dist.y;
-			player_pos.y += step.y;
+			ray_pos->y += step.y;
 			side = 1;
 		}
-		if (map[(int)player_pos.y][(int)player_pos.x] > 0)
+		if (map[ray_pos->y][ray_pos->x] > 0)
 			break ;
 	}
 	return (side);
@@ -72,9 +72,11 @@ void	find_perp_dist(int **map, t_double2 player_pos, t_raycaster *rc)
 {
 	t_vector2	step;
 
+	rc->ray_pos.x = player_pos.x;
+	rc->ray_pos.y = player_pos.y;
 	step = find_step(rc->ray_dir);
 	rc->s_dist = find_s_dist(player_pos, rc->ray_dir, rc->d_dist);
-	rc->side = perfom_dda(map, player_pos, step, rc);
+	rc->side = perfom_dda(map, &rc->ray_pos, step, rc);
 	if (!rc->side)
 		rc->perp_dist = (rc->s_dist.x - rc->d_dist.x);
 	else

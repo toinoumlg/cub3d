@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 13:49:19 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 02:25:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/24 13:35:06 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	fps_counter(t_cub3d *data)
 static int	update(t_cub3d *data)
 {
 	get_current_time(data);
-	clear_image(data->buffer.addr, data->floor, data->ceiling);
+	// clear_image(data->buffer.addr, data->floor, data->ceiling);
 	apply_motion(data);
 	draw_minimap(&data->minimap);
 	raycast(&data->minimap, &data->player, data->textures, data->buffer.addr);
