@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 14:04:29 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:03:19 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/28 08:06:15 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,12 @@ int	check_rgb(char *rgb, t_cub3d *data)
 		exit_error("Missing value(s) for rbg color", data);
 	while (rgb[i])
 	{
-		if (!ft_isdigit(rgb[i++]))
+		if (!ft_isdigit(rgb[i]) && rgb[i] != ' ' && rgb[i] != '\t')
 		{
 			free(rgb);
 			exit_error("Rbg value contain a character", data);
 		}
+		i++;
 	}
 	color = ft_atoi(rgb);
 	free(rgb);

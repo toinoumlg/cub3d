@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 14:04:09 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:03:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/28 08:04:57 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ char	*find_in_config(char *to_find, char **config)
 {
 	while (*config)
 	{
+		if (map_line(*config))
+			return (NULL);
 		if (!ft_strncmp(to_find, *config, ft_strlen(to_find)))
 			return (*config);
 		config++;

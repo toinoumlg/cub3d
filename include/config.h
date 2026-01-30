@@ -6,10 +6,9 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 14:03:34 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 00:56:18 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/28 08:04:07 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef CONFIG_H
 # define CONFIG_H
@@ -29,5 +28,5 @@ void	flood_fill(int x, int y, t_vector2 map_size, t_cub3d *data);
 void	restore_map(int **map, t_vector2 map_size);
 void	parse_config(t_cub3d *data);
 void	load_map(char **config, t_cub3d *data);
-
+int		map_line(char *line);
 #endif

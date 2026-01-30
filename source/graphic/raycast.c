@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 09:26:38 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 14:32:52 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/01/30 10:30:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	floor_raycast(t_raycaster *rc, t_img *textures, t_pxl *buffer, int x,
 		floor = set_double2(rc->ray_pos.x + rc->wall_x, rc->ray_pos.y + 1.0);
 	if (rc->draw_limit.y < 0)
 		rc->draw_limit.y = WINDOW_HEIGHT;
-	y = rc->draw_limit.y ;
+	y = rc->draw_limit.y;
 	while (y < WINDOW_HEIGHT)
 	{
 		current_dist = WINDOW_HEIGHT / (2.0 * y - WINDOW_HEIGHT);
@@ -119,7 +119,8 @@ void	raycast(t_minimap *minimap, t_player *player, t_img *textures,
 		init_raycast(&rc, player, x);
 		find_perp_dist(minimap->array, player->pos, &rc);
 		set_draw_limit(&rc, player);
-		draw_lines_on_map(&rc, minimap, &player->pos);
+		if (!(x % 50))
+			draw_lines_on_map(&rc, minimap, &player->pos);
 		process_texture_coords(&rc, &player->pos, textures);
 		draw_vertical_line(x, buffer, &rc);
 		floor_raycast(&rc, textures, buffer, x++, player);
