@@ -3,83 +3,85 @@
 /*                                                        :::      ::::::::   */
 /*   init_direction.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbah <mbah@student.42lyon.fr>              +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/25 13:55:07 by mbah              #+#    #+#             */
-/*   Updated: 2026/01/25 14:44:10 by mbah             ###   ########.fr       */
+/*   Updated: 2026/03/01 22:28:28 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
  * @file init_direction.c
- * @brief Initializes the player's direction and camera plane 
+ * @brief Initializes the player's direction and camera plane
  * vectors based on the starting orientation.
  *
- * This file contains functions to set the player's 
+ * This file contains functions to set the player's
  * initial direction and camera plane
- * vectors according to the direction character ('N', 'S', 'E', 'W') 
- * specified in the player structure. 
+ * vectors according to the direction character ('N', 'S', 'E', 'W')
+ * specified in the player structure.
  * These vectors are essential for the raycasting algorithm to render
  * the 3D view correctly.
  */
 #include "cub3d.h"
 
-/**
- * @brief Initialize player direction vectors for North/South orientation.
- *
- * Sets the direction and camera plane vectors according to the
- * player's starting direction when facing North or South.
- *
- * - North: looks upward on the map
- * - South: looks downward on the map
- *
- * @param player Pointer to the player structure.
- */
-static void	set_player_orientation_ns(t_player *player)
+#define FOV 70
+
+static double	get_plane_lenght(double pi)
 {
-	if (player->dir == 'S')
-	{
-		player->dir_x = 0.0;
-		player->dir_y = 1.0;
-		player->plane_x = -0.66;
-		player->plane_y = 0.0;
-	}
-	else if (player->dir == 'N')
-	{
-		player->dir_x = 0.0;
-		player->dir_y = -1.0;
-		player->plane_x = 0.66;
-		player->plane_y = 0.0;
-	}
+	float	deg_to_rad;
+
+	deg_to_rad = FOV * pi / 180.0;
+	return (tanf(deg_to_rad / 2.0));
 }
 
-/**
- * @brief Initialize player direction vectors for East/West orientation.
- *
- * Sets the direction and camera plane vectors according to the
- * player's starting direction when facing East or West.
- *
- * - East: looks right on the map
- * - West: looks left on the map
- *
- * @param player Pointer to the player structure.
- */
-static void	set_player_orientation_ew(t_player *player)
+int	is_player_pos(char c)
 {
-	if (player->dir == 'W')
+	return (c == 'N' || c == 'S' || c == 'W' || c == 'E');
+}
+
+static t_double2	find_player(char **map, t_engine *data)
+{
+	int			x;
+	int			y;
+	t_double2	pos;
+
+	ft_memset(&pos, 0, sizeof(t_double2));
+	y = 0;
+	while (map[y])
 	{
-		player->dir_x = -1.0;
-		player->dir_y = 0.0;
-		player->plane_x = 0.0;
-		player->plane_y = -0.66;
+		x = 0;
+		while (map[y][x])
+		{
+			if (is_player_pos(map[y][x]))
+			{
+				if (pos.x || pos.y)
+					exit_free(data, NULL, "Multiple starting position",
+						FAILURE);
+				pos.x = x;
+				pos.y = y;
+			}
+			x++;
+		}
+		y++;
 	}
-	else if (player->dir == 'E')
-	{
-		player->dir_x = 1.0;
-		player->dir_y = 0.0;
-		player->plane_x = 0.0;
-		player->plane_y = 0.66;
-	}
+	if (!pos.x || !pos.y)
+		exit_free(data, NULL, "No starting position", FAILURE);
+	return (pos);
+}
+
+void	set_player_dir(char **map, t_player *player, double pi)
+{
+	char	direction;
+
+	direction = map[(int)player->pos.y][(int)player->pos.x];
+	if (direction == 'W')
+		return (rotate(&player->dir, &player->plane, 3 * pi / 2.0));
+	else if (direction == 'E')
+		return (rotate(&player->dir, &player->plane, pi / 2.0));
+	else if (direction == 'S')
+		return (rotate(&player->dir, &player->plane, pi));
+	else
+		return ;
 }
 
 /**
@@ -91,8 +93,18 @@ static void	set_player_orientation_ew(t_player *player)
  *
  * @param engine Pointer to the main engine structure.
  */
-void	init_player_direction_vectors(t_engine *engine)
+void	set_player(t_engine *data)
 {
-	set_player_orientation_ns(&engine->player);
-	set_player_orientation_ew(&engine->player);
+	double	plane_lenght;
+	double	pi;
+
+	pi = acos(-1.0);
+	plane_lenght = get_plane_lenght(pi);
+	data->player.pos = find_player(data->map, data);
+	data->player.dir.y = -1.0;
+	data->player.plane.x = plane_lenght;
+	set_player_dir(data->map, &data->player, pi);
+	data->map[(int)data->player.pos.y][(int)data->player.pos.x] = '0';
+	data->player.pos.y += 0.5;
+	data->player.pos.x += 0.5;
 }

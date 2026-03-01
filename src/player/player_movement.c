@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   player_movement.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbah <mbah@student.42lyon.fr>              +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/25 15:14:28 by mbah              #+#    #+#             */
-/*   Updated: 2026/01/25 15:24:36 by mbah             ###   ########.fr       */
+/*   Updated: 2026/03/01 23:16:21 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,68 +22,48 @@
 
 #include "cub3d.h"
 
-/**
- * @brief Moves the player forward in the direction they are facing.
- *
- * @param engine Pointer to the main engine structure.
- * @return 1 if the player moved, 0 otherwise.
- */
-static int	move_player_forward(t_engine *engine)
+static int	is_walkable(char **map, t_vector2 size, double x, double y)
 {
-	double	new_x;
-	double	new_y;
+	const double	padding = 0.1;
+	t_vector2		min;
+	t_vector2		max;
 
-	new_x = engine->player.pos_x + engine->player.dir_x * MOVESPEED;
-	new_y = engine->player.pos_y + engine->player.dir_y * MOVESPEED;
-	return (apply_player_movement(engine, new_x, new_y));
+	if (x - padding < 0 || y - padding < 0 || x + padding >= size.x || y
+		+ padding >= size.y)
+		return (0);
+	min.x = (int)(x - padding);
+	min.y = (int)(y - padding);
+	max.x = (int)(x + padding);
+	max.y = (int)(y + padding);
+	return (map[min.y][min.x] == '0' && map[min.y][max.x] == '0'
+		&& map[max.y][min.x] == '0' && map[max.y][max.x] == '0');
 }
 
-/**
- * @brief Moves the player backward opposite to the facing direction.
- *
- * @param engine Pointer to the main engine structure.
- * @return 1 if the player moved, 0 otherwise.
- */
-static int	move_player_backward(t_engine *engine)
+void	move(t_double2 *dir, t_engine *data, double direction)
 {
-	double	new_x;
-	double	new_y;
+	t_double2	new_pos;
+	t_double2	*old_pos;
 
-	new_x = engine->player.pos_x - engine->player.dir_x * MOVESPEED;
-	new_y = engine->player.pos_y - engine->player.dir_y * MOVESPEED;
-	return (apply_player_movement(engine, new_x, new_y));
+	old_pos = &data->player.pos;
+	new_pos.x = old_pos->x + dir->x * direction;
+	new_pos.y = old_pos->y + dir->y * direction;
+	if (is_walkable(data->map, data->map_size, old_pos->x, new_pos.y))
+		old_pos->y = new_pos.y;
+	if (is_walkable(data->map, data->map_size, new_pos.x, old_pos->y))
+		old_pos->x = new_pos.x;
 }
 
-/**
- * @brief Strafes the player to the left (perpendicular to view direction).
- *
- * @param engine Pointer to the main engine structure.
- * @return 1 if the player moved, 0 otherwise.
- */
-static int	strafe_player_left(t_engine *engine)
+void	rotate(t_double2 *dir, t_double2 *plane, double direction)
 {
-	double	new_x;
-	double	new_y;
+	double	old_dir_x;
+	double	old_plane_x;
 
-	new_x = engine->player.pos_x + engine->player.dir_y * MOVESPEED;
-	new_y = engine->player.pos_y - engine->player.dir_x * MOVESPEED;
-	return (apply_player_movement(engine, new_x, new_y));
-}
-
-/**
- * @brief Strafes the player to the right (perpendicular to view direction).
- *
- * @param engine Pointer to the main engine structure.
- * @return 1 if the player moved, 0 otherwise.
- */
-static int	strafe_player_right(t_engine *engine)
-{
-	double	new_x;
-	double	new_y;
-
-	new_x = engine->player.pos_x - engine->player.dir_y * MOVESPEED;
-	new_y = engine->player.pos_y + engine->player.dir_x * MOVESPEED;
-	return (apply_player_movement(engine, new_x, new_y));
+	old_dir_x = dir->x;
+	dir->x = dir->x * cos(direction) - dir->y * sin(direction);
+	dir->y = old_dir_x * sin(direction) + dir->y * cos(direction);
+	old_plane_x = plane->x;
+	plane->x = plane->x * cos(direction) - plane->y * sin(direction);
+	plane->y = old_plane_x * sin(direction) + plane->y * cos(direction);
 }
 
 /**
@@ -92,20 +72,28 @@ static int	strafe_player_right(t_engine *engine)
  * @param engine Pointer to the main engine structure.
  * @return Number of movement actions performed.
  */
-int	update_player_movement(t_engine *engine)
+int	consume_player_movement(t_engine *data)
 {
-	int	nb_movements;
+	t_input	input;
+	double	d_rot;
+	double	d_move;
 
-	nb_movements = 0;
-	if (engine->player.move_y == 1)
-		nb_movements += move_player_forward(engine);
-	if (engine->player.move_y == -1)
-		nb_movements += move_player_backward(engine);
-	if (engine->player.move_x == -1)
-		nb_movements += strafe_player_left(engine);
-	if (engine->player.move_x == 1)
-		nb_movements += strafe_player_right(engine);
-	if (engine->player.rotate != 0)
-		nb_movements += handle_player_rotation(engine, engine->player.rotate);
-	return (nb_movements);
+	d_rot = ROTSPEED * data->timer.delta_time;
+	d_move = MOVESPEED * data->timer.delta_time;
+	input = data->player.inputs;
+	if (input.right)
+		rotate(&data->player.dir, &data->player.plane, d_rot);
+	if (input.left)
+		rotate(&data->player.dir, &data->player.plane, -d_rot);
+	if (input.w)
+		move(&data->player.dir, data, d_move);
+	if (input.s)
+		move(&data->player.dir, data, -d_move);
+	if (input.d)
+		move(&data->player.plane, data, d_move);
+	if (input.a)
+		move(&data->player.plane, data, -d_move);
+	data->minimap.offset.x = data->player.pos.x - data->minimap.visible_square;
+	data->minimap.offset.y = data->player.pos.y - data->minimap.visible_square;
+	return (0);
 }

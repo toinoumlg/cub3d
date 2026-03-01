@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   input_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbah <mbah@student.42lyon.fr>              +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/25 15:27:21 by mbah              #+#    #+#             */
-/*   Updated: 2026/01/31 02:38:20 by mbah             ###   ########.fr       */
+/*   Updated: 2026/03/01 22:58:23 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
  * @file input_handler.c
- * @brief Handles keyboard and mouse input 
+ * @brief Handles keyboard and mouse input
  * for player movement and rotation.
  *
- * This file contains functions to process 
+ * This file contains functions to process
  * key press and release events to update
- * the player's movement and rotation state. 
+ * the player's movement and rotation state.
  * It also includes logic to handle
- * mouse motion for camera rotation, 
+ * mouse motion for camera rotation,
  * with horizontal wrapping to allow infinite
  * rotation without hitting window edges.
  */
@@ -37,20 +37,25 @@
  */
 static int	handle_key_press(int key, t_engine *engine)
 {
+	t_input	*input;
+
+	input = &engine->player.inputs;
 	if (key == KEY_ESC)
-		quit_cub3d(engine);
-	if (key == KEY_LEFT)
-		engine->player.rotate -= 1;
-	if (key == KEY_RIGHT)
-		engine->player.rotate += 1;
+		mlx_loop_end(engine->mlx);
 	if (key == KEY_W)
-		engine->player.move_y = 1;
-	if (key == KEY_A)
-		engine->player.move_x = -1;
+		input->w = true;
 	if (key == KEY_S)
-		engine->player.move_y = -1;
+		input->s = true;
+	if (key == KEY_A)
+		input->a = true;
 	if (key == KEY_D)
-		engine->player.move_x = 1;
+		input->d = true;
+	if (key == KEY_LEFT)
+		input->left = true;
+	if (key == KEY_RIGHT)
+		input->right = true;
+	if (key == XK_f)
+		input->zoom = true;
 	return (0);
 }
 
@@ -63,29 +68,30 @@ static int	handle_key_press(int key, t_engine *engine)
  * @param engine Pointer to the main engine structure.
  * @return Always returns 0.
  */
-static int	handle_key_release(int key, t_engine *engine)
+static int	handle_key_release(int key, t_input *input)
 {
-	if (key == KEY_ESC)
-		quit_cub3d(engine);
-	if (key == KEY_W && engine->player.move_y == 1)
-		engine->player.move_y = 0;
-	if (key == KEY_S && engine->player.move_y == -1)
-		engine->player.move_y = 0;
-	if (key == KEY_A && engine->player.move_x == -1)
-		engine->player.move_x = 0;
-	if (key == KEY_D && engine->player.move_x == 1)
-		engine->player.move_x = 0;
-	if (key == KEY_LEFT && engine->player.rotate <= 1)
-		engine->player.rotate = 0;
-	if (key == KEY_RIGHT && engine->player.rotate >= -1)
-		engine->player.rotate = 0;
+	if (key == KEY_W)
+		input->w = false;
+	if (key == KEY_S)
+		input->s = false;
+	if (key == KEY_A)
+		input->a = false;
+	if (key == KEY_D)
+		input->d = false;
+	if (key == KEY_LEFT)
+		input->left = false;
+	if (key == KEY_RIGHT)
+		input->right = false;
+	if (key == XK_f)
+		input->zoom = false;
 	return (0);
 }
 
 /**
  * @brief Wrap mouse position horizontally when reaching window edges.
  *
- * This allows infinite horizontal mouse movement for continuous camera rotation.
+
+	* This allows infinite horizontal mouse movement for continuous camera rotation.
  *
  * @param engine Pointer to the main engine structure.
  * @param x Current mouse x position.
@@ -93,14 +99,14 @@ static int	handle_key_release(int key, t_engine *engine)
  */
 static void	wrap_mouse_x_position(t_engine *engine, int x, int y)
 {
-	if (x > engine->win_width - DIST_EDGE_MOUSE_WRAP)
+	if (x > WIN_WIDTH - DIST_EDGE_MOUSE_WRAP)
 	{
 		x = DIST_EDGE_MOUSE_WRAP;
 		mlx_move_mouse(engine, x, y);
 	}
 	if (x < DIST_EDGE_MOUSE_WRAP)
 	{
-		x = engine->win_width - DIST_EDGE_MOUSE_WRAP;
+		x = WIN_WIDTH - DIST_EDGE_MOUSE_WRAP;
 		mlx_move_mouse(engine, x, y);
 	}
 }
@@ -123,10 +129,9 @@ static int	handle_mouse_motion(int x, int y, t_engine *engine)
 	if (x == old_x)
 		return (0);
 	else if (x < old_x)
-		engine->player.has_moved += handle_player_rotation(engine, -1);
+		rotate(&engine->player.dir, &engine->player.plane, -ROTSPEED);
 	else if (x > old_x)
-		engine->player.has_moved += handle_player_rotation(engine, 1);
-	old_x = x;
+		rotate(&engine->player.dir, &engine->player.plane, +ROTSPEED);
 	return (0);
 }
 
@@ -139,15 +144,13 @@ static int	handle_mouse_motion(int x, int y, t_engine *engine)
  */
 void	register_input_hooks(t_engine *engine)
 {
-	mlx_hook(engine->win, EVENT_DESTROY,
-		MASK_STRUCTURE_NOTIFY, quit_cub3d, engine);
-	mlx_hook(engine->win, EVENT_KEY_PRESS,
-		MASK_KEY_PRESS, handle_key_press, engine);
-	mlx_hook(engine->win, EVENT_KEY_RELEASE,
-		MASK_KEY_RELEASE, handle_key_release, engine);
+	mlx_hook(engine->win, EVENT_KEY_PRESS, MASK_KEY_PRESS, handle_key_press,
+		engine);
+	mlx_hook(engine->win, EVENT_KEY_RELEASE, MASK_KEY_RELEASE,
+		handle_key_release, &engine->player.inputs);
 	if (BONUS)
 	{
-		mlx_hook(engine->win, EVENT_MOUSE_MOVE,
-			MASK_POINTER_MOTION, handle_mouse_motion, engine);
+		mlx_hook(engine->win, EVENT_MOUSE_MOVE, MASK_POINTER_MOTION,
+			handle_mouse_motion, engine);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 14:18:56 by mbah              #+#    #+#             */
-/*   Updated: 2026/03/01 10:04:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/01 22:49:46 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,15 @@
  */
 static void	init_raycast_info(int x, t_raycast *ray, t_player *player)
 {
-	init_raycast(ray);
-	ray->camera_x = 2.0 * x / (double)WIN_WIDTH - 1.0;
-	ray->dir_x = player->dir_x + player->plane_x * ray->camera_x;
-	ray->dir_y = player->dir_y + player->plane_y * ray->camera_x;
-	ray->map_x = (int)player->pos_x;
-	ray->map_y = (int)player->pos_y;
-	ray->deltadist_x = fabs(1.0 / ray->dir_x);
-	ray->deltadist_y = fabs(1.0 / ray->dir_y);
+	float	cam_x;
+
+	cam_x = 2.0 * x / (float)WIN_WIDTH - 1.0;
+	if (player->inputs.zoom)
+		cam_x = cam_x / 2.0;
+	ray->dir.x = player->dir.x + player->plane.x * cam_x;
+	ray->dir.y = player->dir.y + player->plane.y * cam_x;
+	ray->deltadist.x = fabs(1.0 / ray->dir.x);
+	ray->deltadist.y = fabs(1.0 / ray->dir.y);
 }
 
 /**
@@ -43,36 +44,37 @@ static void	init_raycast_info(int x, t_raycast *ray, t_player *player)
  * @param ray Pointer to raycast structure.
  * @param player Pointer to player data.
  */
-static void	init_dda_step(t_raycast *ray, t_player *player)
+static void	init_dda_step(t_double2 ray_pos, t_vector2 *step, t_raycast *ray)
 {
-	if (ray->dir_x < 0)
+	if (ray->dir.x < 0)
 	{
-		ray->step_x = -1;
-		ray->sidedist_x = (player->pos_x - ray->map_x)
-			* ray->deltadist_x;
+		step->x = -1;
+		ray->sidedist.x = (ray_pos.x - (int)ray_pos.x) * ray->deltadist.x;
 	}
 	else
 	{
-		ray->step_x = 1;
-		ray->sidedist_x = (ray->map_x + 1.0 - player->pos_x)
-			* ray->deltadist_x;
+		step->x = 1;
+		ray->sidedist.x = ((int)ray_pos.x + 1.0 - ray_pos.x) * ray->deltadist.x;
 	}
-	if (ray->dir_y < 0)
+	if (ray->dir.y < 0)
 	{
-		ray->step_y = -1;
-		ray->sidedist_y = (player->pos_y - ray->map_y)
-			* ray->deltadist_y;
+		step->y = -1;
+		ray->sidedist.y = (ray_pos.y - (int)ray_pos.y) * ray->deltadist.y;
 	}
 	else
 	{
-		ray->step_y = 1;
-		ray->sidedist_y = (ray->map_y + 1.0 - player->pos_y)
-			* ray->deltadist_y;
+		step->y = 1;
+		ray->sidedist.y = ((int)ray_pos.y + 1.0 - ray_pos.y) * ray->deltadist.y;
 	}
 }
 
+int	inside_map(t_double2 ray_pos, t_vector2 size)
+{
+	return ((int)ray_pos.x > 0 && (int)ray_pos.x < size.x && (int)ray_pos.y > 0
+		&& (int)ray_pos.y < size.y);
+}
 /**
- * @brief Perform the DDA (Digital Differential Analyzer) 
+ * @brief Perform the DDA (Digital Differential Analyzer)
  * algorithm to detect wall collision.
  *
  * Steps through the map grid until a wall is hit or
@@ -81,32 +83,29 @@ static void	init_dda_step(t_raycast *ray, t_player *player)
  * @param engine Pointer to engine data.
  * @param ray Pointer to raycast structure.
  */
-static void	execute_dda(t_engine *engine, t_raycast *ray)
+static void	execute_dda(char **map, t_double2 ray_pos, t_raycast *ray,
+		t_vector2 size)
 {
-	int	hit;
+	t_vector2	step;
 
-	hit = 0;
-	while (!hit)
+	init_dda_step(ray_pos, &step, ray);
+	while (1)
 	{
-		if (ray->sidedist_x < ray->sidedist_y)
+		if (ray->sidedist.x < ray->sidedist.y)
 		{
-			ray->sidedist_x += ray->deltadist_x;
-			ray->map_x += ray->step_x;
+			ray->sidedist.x += ray->deltadist.x;
+			ray_pos.x += step.x;
 			ray->side = 0;
 		}
 		else
 		{
-			ray->sidedist_y += ray->deltadist_y;
-			ray->map_y += ray->step_y;
+			ray->sidedist.y += ray->deltadist.y;
+			ray_pos.y += step.y;
 			ray->side = 1;
 		}
-		if (ray->map_x < 0.25
-			|| ray->map_y < 0.25
-			|| ray->map_x > engine->mapinfo.width - 1.25
-			|| ray->map_y > engine->mapinfo.height - 0.25)
+		if (!inside_map(ray_pos, size)
+			|| map[(int)ray_pos.y][(int)ray_pos.x] != '0')
 			break ;
-		if (engine->map[ray->map_y][ray->map_x] > '0')
-			hit = 1;
 	}
 }
 
@@ -120,26 +119,51 @@ static void	execute_dda(t_engine *engine, t_raycast *ray)
  * @param engine Pointer to engine data.
  * @param player Pointer to player data.
  */
-static void	compute_wall_projection(t_raycast *ray,
-									t_engine *engine,
-									t_player *player)
+static void	compute_wall_projection(t_raycast *ray)
 {
-	if (ray->side == 0)
-		ray->wall_dist = ray->sidedist_x - ray->deltadist_x;
+	if (!ray->side)
+		ray->wall_dist = ray->sidedist.x - ray->deltadist.x;
 	else
-		ray->wall_dist = ray->sidedist_y - ray->deltadist_y;
-	ray->line_height = (int)(engine->win_height / ray->wall_dist);
-	ray->draw_start = engine->win_height / 2 - ray->line_height / 2;
+		ray->wall_dist = ray->sidedist.y - ray->deltadist.y;
+	ray->line_height = WIN_HEIGHT / ray->wall_dist;
+	ray->draw_start = WIN_HEIGHT / 2 - ray->line_height / 2;
 	if (ray->draw_start < 0)
 		ray->draw_start = 0;
-	ray->draw_end = engine->win_height / 2 + ray->line_height / 2;
-	if (ray->draw_end >= engine->win_height)
-		ray->draw_end = engine->win_height - 1;
-	if (ray->side == 0)
-		ray->wall_x = player->pos_y + ray->wall_dist * ray->dir_y;
+	ray->draw_end = WIN_HEIGHT / 2 + ray->line_height / 2;
+	if (ray->draw_end >= WIN_HEIGHT)
+		ray->draw_end = WIN_HEIGHT - 1;
+}
+
+void	find_wall_dir(t_raycast *ray)
+{
+	if (!ray->side && ray->dir.x > 0)
+		ray->wall_dir = WEST;
+	else if (!ray->side)
+		ray->wall_dir = EAST;
+	else if (ray->dir.y > 0)
+		ray->wall_dir = NORTH;
 	else
-		ray->wall_x = player->pos_x + ray->wall_dist * ray->dir_x;
-	ray->wall_x = ray->wall_x - floor(ray->wall_x);
+		ray->wall_dir = SOUTH;
+}
+
+void	compute_texture_coords(t_raycast *ray, t_double2 *player_pos,
+		t_image *textures)
+{
+	double	wall_x;
+
+	find_wall_dir(ray);
+	if (!ray->side)
+		wall_x = player_pos->y + ray->wall_dist * ray->dir.y;
+	else
+		wall_x = player_pos->x + ray->wall_dist * ray->dir.x;
+	wall_x -= floor(wall_x);
+	ray->texture_coord.x = wall_x * textures[ray->wall_dir].w;
+	ray->step = 1.0 * textures[ray->wall_dir].h / ray->line_height;
+	ray->texture_coord.y = (ray->draw_start - WIN_HEIGHT / 2 + ray->line_height
+			/ 2) * ray->step;
+	if ((!ray->side && ray->dir.x > 0) || (ray->side && ray->dir.y < 0))
+		ray->texture_coord.x = textures[ray->wall_dir].w - ray->texture_coord.x
+			- 1;
 }
 
 /**
@@ -151,21 +175,19 @@ static void	compute_wall_projection(t_raycast *ray,
  * @param engine Pointer to engine data.
  * @return SUCCESS on completion.
  */
-int	perform_raycasting(t_player *player, t_engine *engine)
+void	perform_raycasting(t_player *player, t_engine *engine)
 {
-	t_raycast	ray;
-	int			x;
+	int	x;
 
 	x = 0;
-	ray = engine->ray;
-	while (x < engine->win_width)
+	while (x < WIN_WIDTH)
 	{
-		init_raycast_info(x, &ray, player);
-		init_dda_step(&ray, player);
-		execute_dda(engine, &ray);
-		compute_wall_projection(&ray, engine, player);
-		render_wall_texture_column(engine, &engine->texinfo, &ray, x);
-		x++;
+		init_raycast_info(x, &engine->ray, player);
+		execute_dda(engine->map, engine->player.pos, &engine->ray,
+			engine->map_size);
+		compute_wall_projection(&engine->ray);
+		compute_texture_coords(&engine->ray, &player->pos, engine->textures);
+		draw_vertical_line(x++, engine->buffer.addr, &engine->ray,
+			&engine->textures[engine->ray.wall_dir]);
 	}
-	return (SUCCESS);
 }

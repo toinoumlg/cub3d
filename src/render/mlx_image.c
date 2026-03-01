@@ -6,32 +6,9 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/31 23:34:15 by mbah              #+#    #+#             */
-/*   Updated: 2026/03/01 10:04:40 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/01 21:25:03 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	set_image_pixel(t_image *img, int color, int x, int y)
-{
-	int	pixel;
-
-	pixel = y * (img->size_line / 4) + x;
-	img->addr[pixel] = color;
-}
-
-/**
- * @brief Render all visible elements.
- *
- * Includes the 3D scene and bonus elements if enabled.
- *
- * @param engine Pointer to engine context.
- */
-void	render_images(t_engine *engine)
-{
-	render_3d_scene(engine);
-	if (BONUS)
-	{
-		draw_cub3d_menu(engine);
-	}
-}

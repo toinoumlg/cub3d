@@ -6,7 +6,7 @@
 #    By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/22 15:26:36 by mbah              #+#    #+#              #
-#    Updated: 2026/03/01 11:00:19 by amalangu         ###   ########.fr        #
+#    Updated: 2026/03/01 19:07:17 by amalangu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ OS_MACOS	= 0
 
 # ------------------------- COMPILER SETTINGS --------------------------- #
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror -std=gnu89 #-g3 -fsanitize=address
+CFLAGS	= -Wall -Wextra -Werror -std=gnu89 -g3 #-fsanitize=address
 
 # ------------------------- OS DETECTION & MLX -------------------------- #
 UNAME	= $(shell uname)
@@ -65,11 +65,9 @@ SRC			= main.c \
 			  parser/validate_textures.c \
 			  parser/parse_file_content.c \
 			  parser/parse_config.c \
-			  parser/parse_colors.c \
 			  parser/parse_map_layout.c \
 			  parser/map_utils.c \
 			  parser/map_validation.c \
-			  parser/map_walls_validator.c \
 			  \
 			  player/init_direction.c \
 			  player/input_handler.c \

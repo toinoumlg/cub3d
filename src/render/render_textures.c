@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 15:49:32 by mbah              #+#    #+#             */
-/*   Updated: 2026/03/01 10:04:55 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/01 19:55:29 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,54 +20,6 @@
  *
  * @param engine Pointer to the main engine structure.
  */
-void	init_texture_pixel_buffer(t_engine *engine)
-{
-	int	i;
-
-	if (engine->texture_pixels)
-		free_2d_array((void **)engine->texture_pixels);
-	engine->texture_pixels = ft_calloc(engine->win_height + 1,
-			sizeof * engine->texture_pixels);
-	if (!engine->texture_pixels)
-		clean_exit(engine, print_error_msg(NULL, ERROR_MALLOC, FAILURE));
-	i = 0;
-	while (i < engine->win_height)
-	{
-		engine->texture_pixels[i] = ft_calloc(engine->win_width + 1,
-				sizeof * engine->texture_pixels);
-		if (!engine->texture_pixels[i])
-			clean_exit(engine, print_error_msg(NULL, ERROR_MALLOC, FAILURE));
-		i++;
-	}
-}
-
-/**
- * @brief Determine which wall texture should be used for the ray hit.
- *
- * The texture depends on:
- * - the side hit by the ray (X (0) or Y (1))
- * - the ray direction
- *
- * @param engine Pointer to the engine.
- * @param ray Pointer to the current raycast data.
- */
-static void	select_wall_texture(t_engine *engine, t_raycast *ray)
-{
-	if (ray->side == 0)
-	{
-		if (ray->dir_x < 0)
-			engine->texinfo.index = WEST;
-		else
-			engine->texinfo.index = EAST;
-	}
-	else
-	{
-		if (ray->dir_y > 0)
-			engine->texinfo.index = SOUTH;
-		else
-			engine->texinfo.index = NORTH;
-	}
-}
 
 /**
  * @brief Render one vertical textured wall slice on the screen.
@@ -175,31 +127,20 @@ static void	select_wall_texture(t_engine *engine, t_raycast *ray)
  *
  * This function draws ONE of those slices.
  */
-void	render_wall_texture_column(t_engine *engine,
-			t_texture_info *tex, t_raycast *ray, int screen_x)
+void	draw_vertical_line(int x, int *buffer, t_raycast *ray, t_image *texture)
 {
-	int	y;
 	int	color;
+	int	y;
 
-	select_wall_texture(engine, ray);
-	tex->x = (int)(ray->wall_x * tex->size);
-	if ((ray->side == 0 && ray->dir_x < 0)
-		|| (ray->side == 1 && ray->dir_y > 0))
-		tex->x = tex->size - tex->x - 1;
-	tex->step = 1.0 * tex->size / ray->line_height;
-	tex->pos = (ray->draw_start - engine->win_height / 2
-			+ ray->line_height / 2) * tex->step;
 	y = ray->draw_start;
 	while (y < ray->draw_end)
 	{
-		tex->y = (int)tex->pos & (tex->size - 1);
-		tex->pos += tex->step;
-		color = engine->textures[tex->index]
-		[tex->size * tex->y + tex->x];
-		if (tex->index == NORTH || tex->index == EAST)
+		color = *(texture->addr + (int)ray->texture_coord.x
+				+ (int)ray->texture_coord.y * texture->w);
+		ray->texture_coord.y += ray->step;
+		if (ray->wall_dir == NORTH || ray->wall_dir == EAST)
 			color = (color >> 1) & 8355711;
 		if (color > 0)
-			engine->texture_pixels[y][screen_x] = color;
-		y++;
+			*(buffer + x + y++ * WIN_WIDTH) = color;
 	}
 }

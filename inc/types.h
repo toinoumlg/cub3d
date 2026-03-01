@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   types.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbah <mbah@student.42lyon.fr>              +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 17:07:18 by mbah              #+#    #+#             */
-/*   Updated: 2026/01/22 17:20:00 by mbah             ###   ########.fr       */
+/*   Updated: 2026/03/01 23:01:34 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 
 #ifndef TYPES_H
 # define TYPES_H
-
+# include <stdbool.h>
+# include <sys/time.h>
 typedef unsigned long	t_ulong;
 
 /* ************************************************************************** */
@@ -30,12 +31,12 @@ typedef unsigned long	t_ulong;
  */
 typedef enum e_status_code
 {
-	SUCCESS	= 0,
-	FAILURE	= 1,
-	ERR		= 2,
-	BREAK	= 3,
-	CONTINUE	= 4
-}	t_status_code;
+	SUCCESS,
+	FAILURE,
+	ERR,
+	BREAK,
+	CONTINUE
+}						t_status_code;
 
 /**
  * @enum e_wall_direction
@@ -43,15 +44,27 @@ typedef enum e_status_code
  */
 typedef enum e_wall_direction
 {
-	NORTH	= 0,
-	SOUTH	= 1,
-	EAST	= 2,
-	WEST	= 3
-}	t_wall_direction;
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST
+}						t_direction;
 
 /* ************************************************************************** */
 /*                                STRUCTURES                                  */
 /* ************************************************************************** */
+
+typedef struct s_double2
+{
+	double				x;
+	double				y;
+}						t_double2;
+
+typedef struct s_vector2
+{
+	int					x;
+	int					y;
+}						t_vector2;
 
 /**
  * @struct t_image
@@ -59,34 +72,14 @@ typedef enum e_wall_direction
  */
 typedef struct s_image
 {
-	void	*img;
-	int		*addr;
-	int		pixel_bits;
-	int		size_line;
-	int		endian;
-}	t_image;
-
-/**
- * @struct t_texture_info
- * @brief Stores all texture paths, colors, and mapping parameters.
- */
-typedef struct s_texture_info
-{
-	char			*north;
-	char			*south;
-	char			*west;
-	char			*east;
-	int				*floor;
-	int				*ceiling;
-	unsigned long	hex_floor;
-	unsigned long	hex_ceiling;
-	int				size;
-	int				index;
-	double			step;
-	double			pos;
-	int				x;
-	int				y;
-}	t_texture_info;
+	void				*ptr;
+	int					*addr;
+	int					pixel_bits;
+	int					size_line;
+	int					endian;
+	int					w;
+	int					h;
+}						t_image;
 
 /**
  * @struct t_minimap_ctx
@@ -94,31 +87,11 @@ typedef struct s_texture_info
  */
 typedef struct s_minimap_ctx
 {
-	char	**map;
-	t_image	*img;
-	int		size;
-	int		offset_x;
-	int		offset_y;
-	int		view_dist;
-	int		tile_size;
-	int		draw_off_x;
-	int		draw_off_y;
-}	t_minimap_ctx;
-
-/**
- * @struct t_map_context
- * @brief Stores the map file and parsing information.
- */
-typedef struct s_map_context
-{
-	int		fd;
-	int		line_count;
-	char	*path;
-	char	**file;
-	int		height;
-	int		width;
-	int		index_end_of_map;
-}	t_map_context;
+	t_image				buffer;
+	t_vector2			offset;
+	t_vector2			player;
+	int					visible_square;
+}						t_minimap_ctx;
 
 /**
  * @struct t_raycast
@@ -126,24 +99,29 @@ typedef struct s_map_context
  */
 typedef struct s_raycast
 {
-	double	camera_x;
-	double	dir_x;
-	double	dir_y;
-	int		map_x;
-	int		map_y;
-	int		step_x;
-	int		step_y;
-	double	sidedist_x;
-	double	sidedist_y;
-	double	deltadist_x;
-	double	deltadist_y;
-	double	wall_dist;
-	double	wall_x;
-	int		side;
-	int		line_height;
-	int		draw_start;
-	int		draw_end;
-}	t_raycast;
+	t_double2			sidedist;
+	t_double2			deltadist;
+	t_double2			dir;
+	t_double2			texture_coord;
+	t_direction			wall_dir;
+	int					side;
+	double				step;
+	double				wall_dist;
+	int					line_height;
+	int					draw_start;
+	int					draw_end;
+}						t_raycast;
+
+typedef struct s_input
+{
+	bool				w;
+	bool				a;
+	bool				s;
+	bool				d;
+	bool				left;
+	bool				right;
+	bool				zoom;
+}						t_input;
 
 /**
  * @struct t_player
@@ -151,18 +129,20 @@ typedef struct s_raycast
  */
 typedef struct s_player
 {
-	char	dir;
-	double	pos_x;
-	double	pos_y;
-	double	dir_x;
-	double	dir_y;
-	double	plane_x;
-	double	plane_y;
-	int		has_moved;
-	int		move_x;
-	int		move_y;
-	int		rotate;
-}	t_player;
+	t_double2			dir;
+	t_double2			pos;
+	t_double2			plane;
+	t_double2			move;
+	t_input				inputs;
+}						t_player;
+
+typedef struct s_timer
+{
+	struct timeval		last_frame;
+	struct timeval		current_time;
+	double				time;
+	double				delta_time;
+}						t_timer;
 
 /**
  * @struct t_engine
@@ -170,18 +150,19 @@ typedef struct s_player
  */
 typedef struct s_engine
 {
-	void			*mlx;
-	void			*win;
-	int				win_height;
-	int				win_width;
-	t_map_context	mapinfo;
-	char			**map;
-	t_player		player;
-	t_raycast		ray;
-	int				**texture_pixels;
-	int				**textures;
-	t_texture_info	texinfo;
-	t_image			minimap;
-}	t_engine;
+	void				*mlx;
+	void				*win;
+	char				**map;
+	t_player			player;
+	t_raycast			ray;
+	t_image				textures[4];
+	t_image				buffer;
+	t_vector2			map_size;
+	char				**lines;
+	int					floor;
+	int					ceiling;
+	t_minimap_ctx		minimap;
+	t_timer				timer;
+}						t_engine;
 
 #endif

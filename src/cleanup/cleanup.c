@@ -6,15 +6,15 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 17:46:20 by mbah              #+#    #+#             */
-/*   Updated: 2026/03/01 10:07:53 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/01 23:23:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
  * @file cleanup.c
- * @brief Functions to safely free memory allocated 
+ * @brief Functions to safely free memory allocated
  * in the cub3D engine.
-*/
+ */
 
 #include "cub3d.h"
 
@@ -22,7 +22,7 @@
  * @brief Frees a NULL-terminated 2D array.
  *
  * @param array Pointer to the 2D array to free.
-*/
+ */
 void	free_2d_array(void **array)
 {
 	size_t	i;
@@ -39,47 +39,18 @@ void	free_2d_array(void **array)
 	array = NULL;
 }
 
-/**
- * @brief Frees dynamically allocated strings and 
- * arrays in texture info.
- *
- * @param textures Pointer to the texture info to free.
-*/
-static void	free_texture_info(t_texture_info *textures)
+void	free_textures(t_image *textures, void *mlx)
 {
-	if (!textures)
+	if (!mlx)
 		return ;
-	if (textures->east)
-		free(textures->east);
-	if (textures->north)
-		free(textures->north);
-	if (textures->west)
-		free(textures->west);
-	if (textures->south)
-		free(textures->south);
-	if (textures->floor)
-		free(textures->floor);
-	if (textures->ceiling)
-		free(textures->ceiling);
-}
-
-/**
- * @brief Frees the map context inside the engine.
- *
- * Closes the file descriptor if open and frees the map arrays.
- *
- * @param engine Pointer to the engine containing the map context.
-*/
-static void	free_map_context(t_engine *engine)
-{
-	if (!engine)
-		return ;
-	if (engine->mapinfo.fd >= 0)
-		close(engine->mapinfo.fd);
-	if (engine->mapinfo.file)
-		free_2d_array((void **)engine->mapinfo.file);
-	if (engine->map)
-		free_2d_array((void **)engine->map);
+	if (textures[NORTH].ptr)
+		mlx_destroy_image(mlx, textures[NORTH].ptr);
+	if (textures[SOUTH].ptr)
+		mlx_destroy_image(mlx, textures[SOUTH].ptr);
+	if (textures[WEST].ptr)
+		mlx_destroy_image(mlx, textures[WEST].ptr);
+	if (textures[EAST].ptr)
+		mlx_destroy_image(mlx, textures[EAST].ptr);
 }
 
 /**
@@ -91,18 +62,29 @@ static void	free_map_context(t_engine *engine)
  * - Map context and map
  *
  * @param engine Pointer to the engine to free.
- * @return t_status_code FAILURE (always, used for 
+ * @return t_status_code FAILURE (always, used for
  * convenience in error handling)
-*/
-int	free_engine(t_engine *engine)
+ */
+void	free_engine(t_engine *engine)
 {
-	if (!engine)
-		return (FAILURE);
-	if (engine->textures)
-		free_2d_array((void **)engine->textures);
-	if (engine->texture_pixels)
-		free_2d_array((void **)engine->texture_pixels);
-	free_texture_info(&engine->texinfo);
-	free_map_context(engine);
-	return (FAILURE);
+	if (engine->mlx && engine->buffer.ptr)
+		mlx_destroy_image(engine->mlx, engine->buffer.ptr);
+	free_textures(engine->textures, engine->mlx);
+	free_2d_array((void **)engine->lines);
+	free_2d_array((void **)engine->map);
+	
+	if (engine->mlx && engine->win)
+		mlx_destroy_window(engine->mlx, engine->win);
+	if (engine->mlx)
+	{
+		mlx_destroy_display(engine->mlx);
+		free(engine->mlx);
+	}
+}
+
+void	exit_free(t_engine *engine, char *detail, char *message, int code)
+{
+	print_error_msg(detail, message, code);
+	free_engine(engine);
+	exit(code);
 }

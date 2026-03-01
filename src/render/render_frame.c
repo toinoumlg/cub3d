@@ -6,89 +6,87 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 16:56:02 by mbah              #+#    #+#             */
-/*   Updated: 2026/03/01 10:04:44 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/01 23:03:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-/**
- * @brief Draw a single pixel of the final frame.
- *
- * Priority:
- * 1. Wall texture pixel (if present)
- * 2. Ceiling color (upper half)
- * 3. Floor color (lower half)
- *
- * @param engine Pointer to engine context.
- * @param frame Image being rendered.
- * @param x X screen coordinate.
- * @param y Y screen coordinate.
- */
-static void	draw_frame_pixel(
-	t_engine *engine, t_image *frame, int x, int y)
+static void	clear_buffer(int *buffer, int floor, int ceiling)
 {
-	if (engine->texture_pixels[y][x] > 0)
-		set_image_pixel(frame, engine->texture_pixels[y][x], x, y);
-	else if (y < engine->win_height / 2)
-		set_image_pixel(frame, engine->texinfo.hex_ceiling, x, y);
-	else if (y < engine->win_height - 1)
-		set_image_pixel(frame, engine->texinfo.hex_floor, x, y);
+	int	i;
+
+	i = 0;
+	while (i < WIN_WIDTH * WIN_HEIGHT / 2)
+		buffer[i++] = ceiling;
+	while (i < WIN_WIDTH * WIN_HEIGHT)
+		buffer[i++] = floor;
 }
 
-/**
- * @brief Build and display the full frame image.
- *
- * Creates an image buffer, fills it pixel by pixel,
- * sends it to the window, then destroys it.
- *
- * @param engine Pointer to engine context.
- */
-static void	present_frame(t_engine *engine, t_image *frame)
+int	get_minimap_color(char **array, t_vector2 *coords, t_vector2 *size,
+		t_vector2 *offset)
 {
-	if (BONUS)
-		render_minimap_overlay(engine, frame);
-	mlx_put_image_to_window(engine->mlx, engine->win, frame->img, 0, 0);
-	mlx_destroy_image(engine->mlx, frame->img);
+	int		color;
+	float	x;
+	float	y;
+
+	x = (float)coords->x / MINIMAP_SCALE + offset->x;
+	y = (float)coords->y / MINIMAP_SCALE + offset->y;
+	if (x >= size->x || y >= size->y || y < 0 || x < 0)
+		return (0);
+	if (array[(int)y][(int)x] == 1)
+		color = RED;
+	else if (array[(int)y][(int)x] == 0)
+		color = WHITE;
+	else
+		color = BLUE;
+	return (color);
 }
 
-static void	render_frame_image(t_engine *engine)
+void	draw_player(t_minimap_ctx *minimap)
 {
-	t_image	frame;
-	int		x;
-	int		y;
+	int	x;
+	int	y;
 
-	frame.img = NULL;
-	init_image_mlx(engine, &frame, engine->win_width,
-		engine->win_height);
 	y = 0;
-	while (y < engine->win_height)
+	while (y < 0)
 	{
 		x = 0;
-		while (x < engine->win_width)
-		{
-			draw_frame_pixel(engine, &frame, x, y);
-			x++;
-		}
+		while (x < 8)
+			*(minimap->buffer.addr + minimap->player.x + x++
+					+ (minimap->player.y + y) * minimap->buffer.w) = GREEN;
 		y++;
 	}
-	present_frame(engine, &frame);
 }
 
-/**
- * @brief Perform raycasting and render the 3D scene.
- *
- * Initializes texture buffers, casts rays,
- * then renders the resulting frame.
- *
- * @param engine Pointer to engine context.
- */
-void	render_3d_scene(t_engine *engine)
+void	draw_minimap(t_minimap_ctx *minimap, char **array, t_vector2 *size)
 {
-	init_texture_pixel_buffer(engine);
-	init_raycast(&engine->ray);
-	perform_raycasting(&engine->player, engine);
-	render_frame_image(engine);
+	int			color;
+	t_vector2	coords;
+
+	coords.y = 0;
+	while (coords.y < minimap->buffer.h)
+	{
+		coords.x = 0;
+		while (coords.x < minimap->buffer.w)
+		{
+			color = get_minimap_color(array, &coords, size, &minimap->offset);
+			*(minimap->buffer.addr + coords.x++ + coords.y
+					* minimap->buffer.w) = color;
+		}
+		coords.y++;
+	}
+	draw_player(minimap);
+}
+
+void	get_current_time(t_engine *data)
+{
+	gettimeofday(&data->timer.current_time, NULL);
+	data->timer.delta_time = (data->timer.current_time.tv_sec
+			- data->timer.last_frame.tv_sec) + (data->timer.current_time.tv_usec
+			- data->timer.last_frame.tv_usec) / 1000000.0;
+	data->timer.time += data->timer.delta_time;
+	data->timer.last_frame = data->timer.current_time;
 }
 
 /**
@@ -101,10 +99,16 @@ void	render_3d_scene(t_engine *engine)
  */
 int	render(t_engine *engine)
 {
-	engine->player.has_moved += update_player_movement(
-			engine);
-	if (engine->player.has_moved == 0)
-		return (0);
-	render_images(engine);
+	get_current_time(engine);
+	consume_player_movement(engine);
+	clear_buffer(engine->buffer.addr, engine->floor, engine->ceiling);
+	if (BONUS)
+		draw_minimap(&engine->minimap, engine->map, &engine->map_size);
+	perform_raycasting(&engine->player, engine);
+	if (BONUS)
+		mlx_put_image_to_window(engine->mlx, engine->win,
+			engine->minimap.buffer.ptr, 20, 20);
+	mlx_put_image_to_window(engine->mlx, engine->win, engine->buffer.ptr, 0, 0);
+	mlx_do_sync(engine->mlx);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbah <mbah@student.42lyon.fr>              +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 15:27:13 by mbah              #+#    #+#             */
-/*   Updated: 2026/01/29 15:49:35 by mbah             ###   ########.fr       */
+/*   Updated: 2026/03/01 20:36:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,61 +33,4 @@ int	is_blank(char c)
 		|| c == '\n' || c == '\v' || c == '\f')
 		return (SUCCESS);
 	return (FAILURE);
-}
-
-/**
- * @brief Find the maximum line length in a map file starting from an index.
- *
- * This function iterates through the map file lines starting at index `start`
- * and returns the length of the longest line encountered.
- *
- * It is typically used to determine the effective width of the map and
- * to help normalize map rows during parsing.
- *
- * @param mapinfo Pointer to the map context structure.
- * @param start Index of the first line to consider.
- * @return Length of the longest line.
- */
-size_t	get_max_map_line_length(t_map_context *mapinfo, int start)
-{
-	size_t	max_length;
-
-	max_length = ft_strlen(mapinfo->file[start]);
-	while (mapinfo->file[start])
-	{
-		if (max_length < ft_strlen(mapinfo->file[start]))
-			max_length = ft_strlen(mapinfo->file[start]);
-		start++;
-	}
-	return (max_length);
-}
-
-/**
- * @brief Check if a line contains exactly two commas.
- *
- * This function counts the number of comma characters in the given line
- * and returns true if there are exactly two, which is expected for RGB
- * color definitions in the map file.
- *
- * @param line The string to check.
- * @return 1 if the line contains exactly two commas, 0 otherwise.
- */
-int	line_contains_exactly_two_commas(char *line)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	if (!line)
-		return (0);
-	while (line[i])
-	{
-		if (line[i] == ',')
-			count++;
-		i++;
-	}
-	if (count == 2)
-		return (1);
-	return (0);
 }

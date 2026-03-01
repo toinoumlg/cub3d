@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/31 02:08:49 by mbah              #+#    #+#             */
-/*   Updated: 2026/03/01 10:07:57 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/01 17:55:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,7 @@ void	mlx_platform_cleanup(void *mlx)
 
 void	mlx_center_mouse(t_engine *engine)
 {
-	mlx_mouse_move(
-		engine->mlx,
-		engine->win,
-		engine->win_width / 2,
-		engine->win_height / 2);
+	mlx_mouse_move(engine->mlx, engine->win, WIN_WIDTH / 2, WIN_HEIGHT / 2);
 }
 
 void	mlx_move_mouse(t_engine *engine, int x, int y)

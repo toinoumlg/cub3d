@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/30 16:59:36 by mbah              #+#    #+#             */
-/*   Updated: 2026/03/01 11:30:11 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/01 23:26:34 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,44 +40,17 @@ static int	count_file_lines(char *path)
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 		print_error_msg(path, strerror(errno), errno);
-	else
+	while (1)
 	{
+		line = NULL;
 		line = get_next_line(fd);
-		while (line)
-		{
-			count++;
-			free(line);
-			line = get_next_line(fd);
-		}
-		close(fd);
+		if (!line)
+			break ;
+		count++;
+		free(line);
 	}
+	close(fd);
 	return (count);
-}
-
-/**
- * @brief Allocates and copies one line into the file array.
- *
- * @param data Pointer to engine context.
- * @param line Source line read from file.
- * @param index Destination index in file array.
- * @return SUCCESS or FAILURE.
- */
-static int	store_file_line(t_engine *data, char *line, int index)
-{
-	int	i;
-
-	data->mapinfo.file[index]
-		= ft_calloc(ft_strlen(line) + 1, sizeof(char));
-	if (!data->mapinfo.file[index])
-		return (print_error_msg(NULL, ERROR_MALLOC, FAILURE));
-	i = 0;
-	while (line[i])
-	{
-		data->mapinfo.file[index][i] = line[i];
-		i++;
-	}
-	data->mapinfo.file[index][i] = '\0';
-	return (SUCCESS);
 }
 
 /**
@@ -87,26 +60,29 @@ static int	store_file_line(t_engine *data, char *line, int index)
  *
  * @param data Pointer to engine context.
  */
-static void	load_file_lines(t_engine *data)
+static void	copy_lines(t_engine *data, int fd, int line_count)
 {
 	char	*line;
-	int		line_index;
+	int		i;
 
-	line_index = 0;
-	line = get_next_line(data->mapinfo.fd);
-	while (line)
+	i = 0;
+	while (i < line_count)
 	{
-		if (store_file_line(data, line, line_index) == FAILURE)
+		line = get_next_line(fd);
+		if (!line)
+			break ;
+		if (*line == '\n')
 		{
-			free(line);
-			free_2d_array((void **)data->mapinfo.file);
-			return ;
+			data->lines[i++] = line;
+			continue ;
 		}
+		data->lines[i] = ft_strtrim(line, "\n");
 		free(line);
-		line = get_next_line(data->mapinfo.fd);
-		line_index++;
+		if (!data->lines[i++])
+			exit_free(data, NULL, ERROR_MALLOC, FAILURE);
 	}
-	data->mapinfo.file[line_index] = NULL;
+	if (i != line_count)
+		exit_free(data, NULL, "Failed reach EOF during copy", FAILURE);
 }
 
 /**
@@ -117,23 +93,17 @@ static void	load_file_lines(t_engine *data)
  * @param path Path to the .cub file.
  * @param data Pointer to the engine context.
  */
-void	load_cub_file(char *path, t_engine *data)
+void	load_file(char *path, t_engine *data)
 {
-	data->mapinfo.line_count = count_file_lines(path);
-	data->mapinfo.path = path;
-	data->mapinfo.file = ft_calloc(data->mapinfo.line_count + 1,
-			sizeof(char *));
-	if (!data->mapinfo.file)
-	{
-		print_error_msg(NULL, ERROR_MALLOC, FAILURE);
-		return ;
-	}
-	data->mapinfo.fd = open(path, O_RDONLY);
-	if (data->mapinfo.fd < 0)
-		print_error_msg(path, strerror(errno), FAILURE);
-	else
-	{
-		load_file_lines(data);
-		close(data->mapinfo.fd);
-	}
+	int	line_count;
+	int	fd;
+
+	line_count = count_file_lines(path);
+	data->lines = ft_calloc(line_count + 1, sizeof(char *));
+	if (!data->lines)
+		exit_free(data, NULL, ERROR_MALLOC, FAILURE);
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		exit_free(data, path, strerror(errno), FAILURE);
+	copy_lines(data, fd, line_count);
 }
