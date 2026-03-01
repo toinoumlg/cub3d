@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mbah <mbah@student.42lyon.fr>              +#+  +:+       +#+         #
+#    By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/22 15:26:36 by mbah              #+#    #+#              #
-#    Updated: 2026/02/11 13:51:57 by mbah             ###   ########.fr        #
+#    Updated: 2026/03/01 11:00:19 by amalangu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ OS_MACOS	= 0
 
 # ------------------------- COMPILER SETTINGS --------------------------- #
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror #-g3 -fsanitize=address
+CFLAGS	= -Wall -Wextra -Werror -std=gnu89 #-g3 -fsanitize=address
 
 # ------------------------- OS DETECTION & MLX -------------------------- #
 UNAME	= $(shell uname)
@@ -85,7 +85,6 @@ SRC			= main.c \
 			  render/minimap_builder.c \
 			  render/minimap_image.c \
 			  \
-			  debug/debug.c
 			  
 ifeq ($(UNAME), Darwin)
 	SRC += cleanup/mlx_macos_platform.c
@@ -121,7 +120,6 @@ $(OBJ_PATH):
 		$(OBJ_PATH)/parser \
 		$(OBJ_PATH)/player \
 		$(OBJ_PATH)/render \
-		$(OBJ_PATH)/debug \
 		$(OBJ_PATH)/cleanup
 
 # Compile object files
