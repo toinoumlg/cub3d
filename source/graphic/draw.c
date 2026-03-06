@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:56:43 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:02:49 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/01 18:30:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,6 @@ void	draw_vertical_line(int x, t_pxl *buffer, t_raycaster *rc)
 		color = *(rc->text->addr + (int)text_c.x + (int)text_c.y * w);
 		text_c.y += rc->step;
 		// norminette ??
-		*(buffer + x + rc->draw_limit.x++ * (int)WINDOW_WIDTH) = color;
+		*(buffer + x + rc->draw_limit.x++ * (int)WINDOW_WIDTH) = color; 
 	}
 }
