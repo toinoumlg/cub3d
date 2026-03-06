@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 15:57:03 by mbah              #+#    #+#             */
-/*   Updated: 2026/03/01 23:06:42 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/06 01:20:20 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -362,6 +362,7 @@ void	draw_vertical_line(int x, int *buffer, t_raycast *ray,
 			t_image *texture);
 
 void	exit_free(t_engine *engine, char *detail, char *message, int code);
+void	rotate(t_double2 *dir, t_double2 *plane, double direction);
 
 # define MINIMAP_SCALE 32
 
