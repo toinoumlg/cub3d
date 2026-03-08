@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   png_to_img.h                                       :+:      :+:    :+:   */
+/*   mlx_png_to_img.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 15:23:52 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 16:16:24 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 21:05:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,6 @@ typedef struct s_png
 	int			y;
 }				t_png;
 
-void			png_to_img(char *file_name, t_img *texture, void *mlx);
+void			*mlx_png_to_img(char *path, void *mlx, int *width, int *heigth);
 
 #endif

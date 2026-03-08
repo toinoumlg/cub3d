@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:46:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/11 13:40:47 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 21:09:32 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,11 @@ t_obj	load_obj_with_texture(char *object_name, char *texture_name, void *mlx)
 		free(gnl);
 	}
 	free_verts(verts);
-	png_to_img(texture_name, &new_obj.texture, mlx);
+	new_obj.texture.ptr = mlx_png_to_img(texture_name, mlx, &new_obj.texture.w,
+			&new_obj.texture.h);
+
+	new_obj.texture.addr = mlx_get_data_addr(new_obj.texture.ptr,
+			&new_obj.texture.bpp, &new_obj.texture.lenght,
+			&new_obj.texture.end);
 	return (new_obj);
 }

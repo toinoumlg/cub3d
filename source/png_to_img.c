@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   png_to_img.c                                       :+:      :+:    :+:   */
+/*   mlx_png_to_img.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 12:56:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/11/09 21:01:33 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 21:05:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,15 +102,16 @@ void	free_png(t_png png)
 }
 
 // from https://gist.github.com/jeroen/10eb17a9fb0e5799b772
-void	png_to_img(char *file_name, t_img *texture, void *mlx)
+void	*mlx_png_to_img(char *path, void *mlx, int *width, int *heigth)
 {
 	int		y;
 	t_png	png;
 	FILE	*fp;
+	t_img	img;
 
-	fp = init_png(file_name, &png);
+	fp = init_png(path, &png);
 	if (!fp)
-		return ;
+		return (NULL);
 	set_png_info(&png);
 	png.rows = malloc(sizeof(png_byte *) * png.height);
 	y = 0;
@@ -118,11 +119,13 @@ void	png_to_img(char *file_name, t_img *texture, void *mlx)
 		png.rows[y++] = malloc(png_get_rowbytes(png.p, png.info));
 	png_read_image(png.p, png.rows);
 	fclose(fp);
-	texture->ptr = mlx_new_image(mlx, png.width, png.height);
-	texture->w = png.width;
-	texture->h = png.height;
-	texture->addr = mlx_get_data_addr(texture->ptr, &texture->bpp,
-			&texture->lenght, &texture->end);
-	copy_png_to_img(&png, texture);
+	img.ptr = mlx_new_image(mlx, png.width, png.height);
+	img.w = png.width;
+	img.h = png.height;
+	img.addr = mlx_get_data_addr(img.ptr, &img.bpp, &img.lenght, &img.end);
+	copy_png_to_img(&png, &img);
 	free_png(png);
+	*width = img.w;
+	*heigth = img.h;
+	return (img.ptr);
 }
