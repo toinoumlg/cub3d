@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 09:50:31 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 02:30:25 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 10:23:59 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	get_size(char **config, t_vector2 *size)
 	}
 }
 
-void	copy_map_row(char *line, int *map_row, t_cub3d *data)
+void	copy_map_row(char *line, char *map_row, t_cub3d *data)
 {
 	int	i;
 
@@ -61,7 +61,7 @@ void	copy_map_row(char *line, int *map_row, t_cub3d *data)
 		if (*line == '\t')
 			i += 4;
 		else if (*line == '1' || *line == '0')
-			map_row[i++] = *line - '0';
+			map_row[i++] = *line;
 		else if (*line == 'N' || *line == 'E' || *line == 'S' || *line == 'W')
 			map_row[i++] = *line;
 		else if (*line == ' ')

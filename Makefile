@@ -1,6 +1,6 @@
-NAME = cub3d
+NAME = cub3D
 CC = cc
-CFLAGS = -Werror -Wextra -Wall -std=gnu89
+CFLAGS = -Werror -Wextra -Wall -g0 -std=gnu89
 
 OBJECTS_DIR = build
 INCLUDE_DIR = include
@@ -8,13 +8,13 @@ MLX_DIR = mlx
 LIBFT_DIR = libft
 
 SOURCE_DIR = source
-SOURCES_MAIN = main \
+SOURCES_MAIN = main png_to_img \
 	utils/utils utils/free utils/timer \
 	graphic/raycast graphic/draw graphic/utils graphic/dda graphic/minimap  \
 	logic/movement  logic/loop logic/key_handler \
 	config/flood_fill config/map config/init \
 	config/texture config/parsing config/utils \
-	config/alloc
+	config/alloc 
 
 SOURCES = $(addprefix $(SOURCE_DIR)/, $(addsuffix .c, $(SOURCES_MAIN))) 
 OBJECTS = $(SOURCES:$(SOURCE_DIR)/%.c=$(OBJECTS_DIR)/%.o)

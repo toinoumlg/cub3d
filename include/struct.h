@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/01 20:16:34 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 10:47:19 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "mlx.h"
 # include <math.h>
+# include <stdbool.h>
 # include <sys/time.h>
 
 # ifndef CONFIG
@@ -29,13 +30,13 @@ typedef unsigned int	t_pxl;
 
 typedef struct s_input
 {
-	int					w;
-	int					a;
-	int					s;
-	int					d;
-	int					left;
-	int					right;
-	int					zoom;
+	bool				w;
+	bool				a;
+	bool				s;
+	bool				d;
+	bool				left;
+	bool				right;
+	bool				zoom;
 }						t_input;
 
 typedef struct s_double2
@@ -74,7 +75,7 @@ typedef struct s_player
 	t_double2			pos;
 	t_double2			dir;
 	t_double2			plane;
-	int					zoom;
+	bool				zoom;
 	t_input				inputs;
 }						t_player;
 
@@ -96,7 +97,7 @@ typedef struct s_raycaster
 typedef struct s_minimap
 {
 	t_img				buffer;
-	int					**array;
+	char				**array;
 	t_vector2			size;
 	t_double2			offset;
 	t_double2			visible_square;

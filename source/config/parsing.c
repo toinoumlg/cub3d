@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 11:03:13 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/01 20:16:44 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 14:19:23 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	set_dir(int direction, t_player *player, double pi)
 		return ;
 }
 
-static t_vector2	find_player(int **map, t_vector2 size, t_cub3d *data)
+static t_vector2	find_player(char **map, t_vector2 size, t_cub3d *data)
 {
 	t_vector2	i;
 	t_vector2	pos;
@@ -65,7 +65,7 @@ static float	get_plane_lenght(double pi)
 	return (tanf(deg_to_rad / 2.0f));
 }
 
-void	set_player(int **map, t_vector2 size, t_cub3d *data)
+void	set_player(char **map, t_vector2 size, t_cub3d *data)
 {
 	t_vector2	coords;
 	float		plane_lenght;
@@ -78,7 +78,16 @@ void	set_player(int **map, t_vector2 size, t_cub3d *data)
 	data->player.plane = set_double2(plane_lenght, 0.0);
 	set_dir(map[coords.y][coords.x], &data->player, pi);
 	data->player.pos = set_double2(coords.x + 0.5, coords.y + 0.5);
-	map[coords.y][coords.x] = 0;
+	map[coords.y][coords.x] = '0';
+}
+
+void	print_map(char **map)
+{
+	int	i;
+
+	i = 0;
+	while (map[i])
+		printf("%s\n", map[i++]);
 }
 
 void	parse_config(t_cub3d *data)

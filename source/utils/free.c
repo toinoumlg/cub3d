@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 13:43:50 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 02:30:25 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 11:48:25 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void	free_config(char **array)
+void	free_array(char **array)
 {
 	int	i;
 
@@ -25,18 +25,6 @@ void	free_config(char **array)
 	while (array[i])
 		free(array[i++]);
 	free(array);
-}
-
-static void	free_map(int **map, int y)
-{
-	int	i;
-
-	i = 0;
-	if (!map)
-		return ;
-	while (i < y)
-		free(map[i++]);
-	free(map);
 }
 
 static void	ft_close(int *fd)
@@ -58,6 +46,8 @@ static void	free_mlx(t_cub3d *data)
 		mlx_destroy_image(data->mlx, data->textures[2].ptr);
 	if (data->textures[3].ptr)
 		mlx_destroy_image(data->mlx, data->textures[3].ptr);
+	if (data->minimap.buffer.ptr)
+		mlx_destroy_image(data->mlx, data->minimap.buffer.ptr);
 	if (data->window)
 		mlx_destroy_window(data->mlx, data->window);
 	if (data->mlx)
@@ -70,8 +60,8 @@ static void	free_mlx(t_cub3d *data)
 int	free_cub3d(t_cub3d *data)
 {
 	free_mlx(data);
-	free_map(data->minimap.array, data->minimap.size.y);
-	free_config(data->config);
+	free_array(data->minimap.array);
+	free_array(data->config);
 	ft_close(&data->fd);
 	return (1);
 }

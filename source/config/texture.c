@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 14:04:29 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:03:19 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 13:52:17 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,47 +17,75 @@
 #include "mem.h"
 #include "str.h"
 #include "swap.h"
+#include <stdio.h>
 
-int	check_rgb(char *rgb, t_cub3d *data)
+bool	is_nbr(char *str)
 {
 	int	i;
-	int	color;
 
 	i = 0;
-	if (!rgb)
-		exit_error("Missing value(s) for rbg color", data);
-	while (rgb[i])
+	while (str[i])
 	{
-		if (!ft_isdigit(rgb[i++]))
-		{
-			free(rgb);
-			exit_error("Rbg value contain a character", data);
-		}
+		if (ft_isdigit(str[i]))
+			i++;
+		else
+			return (false);
 	}
-	color = ft_atoi(rgb);
-	free(rgb);
-	if (color < 0 || color > 255)
-		exit_error("Rgb value is outside of it's range", data);
-	return (color);
+	return (true);
+}
+
+int	check_size(char **split)
+{
+	int	i;
+
+	i = 0;
+	while (split[i])
+		i++;
+	return (i);
+}
+
+int	check_rgb(char **split, t_cub3d *data)
+{
+	int				i;
+	int				tmp;
+	unsigned char	rgb[3];
+
+	i = 0;
+	if (check_size(split) != 3)
+	{
+		free_array(split);
+		exit_error("Invalid rbg value", data);
+	}
+	while (split[i])
+	{
+		tmp = -1;
+		if (is_nbr(split[i]))
+			tmp = ft_atoi(split[i]);
+		if (tmp < 0 || tmp > 255)
+		{
+			free_array(split);
+			exit_error("Invalid rbg value", data);
+		}
+		rgb[i++] = tmp;
+	}
+	return (create_rgb(rgb[0], rgb[1], rgb[2]));
 }
 
 int	set_color_from_config(char *to_find, char **config, t_cub3d *data)
 {
 	char	*line;
-	char	**rgb;
+	char	**split;
 	t_pxl	color;
 
 	line = find_in_config(to_find, config);
 	if (!line)
 		exit_error("Missing rgb values in config file", data);
 	line += ft_strlen(to_find);
-	rgb = ft_split(line, ',');
-	if (!rgb)
+	split = ft_split(line, ',');
+	if (!split)
 		exit_error("Failed to split rbg values", data);
-	// not leak free
-	color = create_trgb(0, check_rgb(rgb[0], data), check_rgb(rgb[1], data),
-			check_rgb(rgb[2], data));
-	free(rgb);
+	color = check_rgb(split, data);
+	free_array(split);
 	return (color);
 }
 

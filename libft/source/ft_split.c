@@ -6,10 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 13:02:28 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/21 09:10:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 11:33:17 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "mem.h"
 #include "str.h"
 
 void	free_split(char **split)
@@ -54,7 +55,7 @@ char	*fill_word(char const *s, char c)
 	i = 0;
 	while (s[i] != c && s[i])
 		i++;
-	str = malloc(sizeof(char) * (i + 1));
+	str = ft_calloc(sizeof(char), (i + 1));
 	if (!str)
 		return (NULL);
 	i = 0;
@@ -78,7 +79,7 @@ char	**ft_split(char const *s, char c)
 
 	if (!s)
 		return (NULL);
-	split = malloc(sizeof(char *) * (word_count(s, c) + 1));
+	split = ft_calloc(sizeof(char *), (word_count(s, c) + 1));
 	if (!split)
 		return (NULL);
 	i = 0;

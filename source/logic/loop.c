@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 13:49:19 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 02:25:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 13:08:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,9 @@ static void	fps_counter(t_cub3d *data)
 {
 	char	*tmp;
 
-	// char	*join;
 	tmp = ft_itoa((int)(1 / data->timer.delta_time));
 	mlx_string_put(data->mlx, data->window, 5, 10, __INT_MAX__, tmp);
 	free(tmp);
-	// tmp = ft_itoa(data->player.pos.)
-	// mlx_string_put(data->mlx, data->window, 5, 20, __INT_MAX__, tmp);
 }
 
 static int	update(t_cub3d *data)
@@ -47,7 +44,6 @@ static int	update(t_cub3d *data)
 	mlx_put_image_to_window(data->mlx, data->window, data->minimap.buffer.ptr,
 		20, 20);
 	fps_counter(data);
-	mlx_do_sync(data->mlx);
 	return (0);
 }
 

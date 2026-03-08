@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 14:04:09 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 01:03:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 12:48:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,23 @@ int	ft_strlen_with_tab(char *str)
 
 char	*find_in_config(char *to_find, char **config)
 {
+	bool	found;
+	char	*tmp;
+
+	found = false;
+	tmp = NULL;
 	while (*config)
 	{
 		if (!ft_strncmp(to_find, *config, ft_strlen(to_find)))
-			return (*config);
+		{
+			if (found)
+				return (NULL);
+			tmp = *config;
+			found = true;
+		}
 		config++;
 	}
-	return (NULL);
+	return (tmp);
 }
 
 static int	file_size(int fd)
@@ -69,10 +79,17 @@ static int	file_size(int fd)
 
 int	try_open(char *config)
 {
-	int	fd;
+	int		fd;
+	char	*cub;
 
-	if (!config || ft_strncmp(ft_strnstr(config, ".cub", ft_strlen(config)),
-			".cub", 5))
+	fd = open(config, __O_DIRECTORY);
+	if (fd > 0)
+	{
+		close(fd);
+		exit_error("Input file is a directory", NULL);
+	}
+	cub = ft_strnstr(config, ".cub", ft_strlen(config));
+	if (!config || !cub || ft_strncmp(cub, ".cub", 5))
 		exit_error("No map file or invalid extension", NULL);
 	fd = open(config, O_RDONLY);
 	if (fd < 0)

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 12:26:41 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/01 23:02:01 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 13:14:44 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,21 @@ void	rotate(t_double2 *dir, t_double2 *plane, float direction, double d_time)
 			* d_time);
 }
 
-static int	is_walkable(int **map, t_vector2 size, int x, int y)
+static int	is_walkable(char **map, t_vector2 size, float x, float y)
 {
-	if (x < 0 || y < 0 || x >= size.x || y >= size.y)
+	const double	padding = 0.1;
+	t_vector2		min;
+	t_vector2		max;
+
+	if (x - padding < 0 || y - padding < 0 || x + padding >= size.x || y
+		+ padding >= size.y)
 		return (0);
-	return (map[y][x] == 0);
+	min.x = (int)(x - padding);
+	min.y = (int)(y - padding);
+	max.x = (int)(x + padding);
+	max.y = (int)(y + padding);
+	return (map[min.y][min.x] == '0' && map[min.y][max.x] == '0'
+		&& map[max.y][min.x] == '0' && map[max.y][max.x] == '0');
 }
 
 void	move(t_double2 *dir, t_cub3d *data, int direction)
@@ -46,11 +56,11 @@ void	move(t_double2 *dir, t_cub3d *data, int direction)
 	old_pos = &data->player.pos;
 	new_pos.x = old_pos->x + dir->x * (direction * data->timer.delta_time);
 	new_pos.y = old_pos->y + dir->y * (direction * data->timer.delta_time);
-	if (is_walkable(data->minimap.array, data->minimap.size, (int)old_pos->x,
-			(int)new_pos.y))
+	if (is_walkable(data->minimap.array, data->minimap.size, old_pos->x,
+			new_pos.y))
 		old_pos->y = new_pos.y;
-	if (is_walkable(data->minimap.array, data->minimap.size, (int)new_pos.x,
-			(int)old_pos->y))
+	if (is_walkable(data->minimap.array, data->minimap.size, new_pos.x,
+			old_pos->y))
 		old_pos->x = new_pos.x;
 }
 

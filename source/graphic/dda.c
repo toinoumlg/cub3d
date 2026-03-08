@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 21:58:26 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 00:12:47 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 10:20:53 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static t_double2	find_s_dist(t_double2 player_pos, t_double2 ray_dir,
 	return (s_dist);
 }
 
-static int	perfom_dda(int **map, t_double2 player_pos, t_vector2 step,
+static int	perfom_dda(char **map, t_double2 player_pos, t_vector2 step,
 		t_raycaster *rc)
 {
 	int	side;
@@ -62,13 +62,13 @@ static int	perfom_dda(int **map, t_double2 player_pos, t_vector2 step,
 			player_pos.y += step.y;
 			side = 1;
 		}
-		if (map[(int)player_pos.y][(int)player_pos.x] > 0)
+		if (map[(int)player_pos.y][(int)player_pos.x] > '0')
 			break ;
 	}
 	return (side);
 }
 
-void	find_perp_dist(int **map, t_double2 player_pos, t_raycaster *rc)
+void	find_perp_dist(char **map, t_double2 player_pos, t_raycaster *rc)
 {
 	t_vector2	step;
 
