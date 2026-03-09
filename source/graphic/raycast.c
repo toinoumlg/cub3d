@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 09:26:38 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 02:30:44 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/09 14:00:24 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,11 @@ static void	process_texture_coords(t_raycaster *rc, t_double2 *player_pos,
 	rc->step = 1.0 * rc->text->w / rc->line_height;
 	rc->text_coord.y = (rc->draw_limit.x - WINDOW_HEIGHT / 2 + rc->line_height
 			/ 2) * rc->step;
-	if ((!rc->side && rc->ray_dir.x > 0) || (rc->side && rc->ray_dir.y < 0))
+	if (!rc->side && rc->ray_dir.x > 0)
 		rc->text_coord.x = rc->text->w - rc->text_coord.x - 1;
+	if (rc->side && rc->ray_dir.y < 0)
+		rc->text_coord.x = rc->text->w - rc->text_coord.x - 1;
+	rc->text_coord.x = rc->text->w - rc->text_coord.x;
 }
 
 void	raycast(t_minimap *minimap, t_player *player, t_img *textures,
