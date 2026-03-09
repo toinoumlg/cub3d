@@ -8,7 +8,7 @@ MLX_DIR = mlx
 LIBFT_DIR = libft
 
 SOURCE_DIR = source
-SOURCES_MAIN = main png_to_img \
+SOURCES_MAIN = main \
 	utils/utils utils/free utils/timer \
 	graphic/raycast graphic/draw graphic/utils graphic/dda graphic/minimap  \
 	logic/movement  logic/loop logic/key_handler \

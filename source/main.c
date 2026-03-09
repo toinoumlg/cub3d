@@ -6,14 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 07:57:59 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/08 14:07:41 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/08 14:26:44 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "config.h"
 #include "cub_utils.h"
 #include "logic.h"
-#include "png_to_img.h"
 
 int	main(int ac, char **av)
 {
