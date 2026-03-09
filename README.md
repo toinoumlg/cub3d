@@ -46,7 +46,11 @@ Clone the repository and compile:
 ```bash
 make
 ```
+For bonus features:
 
+```bash
+make bonus
+```
 ### Execution
 
 Run the program with a valid .cub map file:
@@ -67,27 +71,29 @@ Strafe left -------> A
 
 Strafe right ------> D
 
-Rotate camera -----> ← →
-
 Zoom in -----------> F
+
+Rotate camera -----> ← →
 
 Exit program ------> ESC
 
+Mouse movement can also be used for camera rotation (bonus).
 
 ### Project Structure
 
 ```text
 cub3D/
-├── inc/             # Headers and type definitions
-├── src/             # Source code
+├── include/         # Headers and type definitions
+├── source/          # Source code
 │   ├── config/      # File and map parsing
-│   ├── logic/       # Movement and controls
 │   ├── graphic/     # Raycasting and rendering
-│   └── utils/       # Utilities
+│   ├── logic/       # Movement and controls
+│   ├── utils/       # Engine and MLX initialization
+│   └── cleanup/     # Memory managment, timer..
 ├── maps/            # Test maps (valid and invalid)
 ├── textures/        # Wall textures
 ├── libft/           # Libft
-├── mlx/       		 # MiniLibX 
+├── mlx/       # MiniLibX (macOS & Linux)
 └── Makefile
 ````
 ## Resources
@@ -111,9 +117,9 @@ cub3D/
 
 ## AI Usage
 
-AI tools were used specifically for:
+AI tools were used  for:
 
-- Writing this README
+- Writing README
 
 All code was **written, tested, and validated manually** by the author.  
 AI was **never used to generate complete source files**.
