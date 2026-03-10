@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 17:22:14 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/08 11:27:14 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/10 19:14:21 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,8 @@ t_vector2	set_vector2(int x, int y);
 t_double2	set_double2(float x, float y);
 double		ft_abs(double nb);
 void		exit_error(char *error, t_cub3d *data);
+char		*skip_whitespace(char *str);
+bool		is_nbr(char *str);
+int			map_line(char *line);
 
 #endif

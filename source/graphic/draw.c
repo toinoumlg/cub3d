@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:56:43 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/08 13:21:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/10 19:11:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,6 @@ void	clear_image(t_pxl *buffer, int floor, int ceiling)
 		buffer[i++] = ceiling;
 }
 
-void	shade(t_pxl *color, float shading)
-{
-	*color = (((int)((unsigned char)(*color >> 16) / shading) << 16)
-			+ ((int)((unsigned char)(*color >> 8) / shading) << 8)
-			+ ((int)((unsigned char)(*color >> 0) / shading) << 0));
-}
-
 void	draw_vertical_line(int x, t_pxl *buffer, t_raycaster *rc)
 {
 	t_pxl		color;
@@ -43,8 +36,8 @@ void	draw_vertical_line(int x, t_pxl *buffer, t_raycaster *rc)
 	text_c = rc->text_coord;
 	while (rc->draw_limit.x < rc->draw_limit.y)
 	{
-		color = *(rc->text->addr + (int)text_c.x + (int)text_c.y * w);
+		color = rc->text->addr[(int)text_c.x + (int)text_c.y * w];
 		text_c.y += rc->step;
-		*(buffer + x + rc->draw_limit.x++ * (int)WINDOW_WIDTH) = color; 
+		buffer[x + rc->draw_limit.x++ *(int)WINDOW_WIDTH] = color;
 	}
 }

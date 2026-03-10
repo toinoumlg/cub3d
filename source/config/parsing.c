@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 11:03:13 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/09 13:54:41 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/10 14:25:19 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,6 @@ void	set_player(char **map, t_vector2 size, t_cub3d *data)
 	set_dir(map[coords.y][coords.x], &data->player, pi);
 	data->player.pos = set_double2(coords.x + 0.5, coords.y + 0.5);
 	map[coords.y][coords.x] = '0';
-}
-
-void	print_map(char **map)
-{
-	int	i;
-
-	i = 0;
-	while (map[i])
-		printf("%s\n", map[i++]);
 }
 
 void	parse_config(t_cub3d *data)

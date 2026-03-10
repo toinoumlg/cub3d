@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 11:46:30 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/24 02:19:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/10 14:00:17 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,6 @@
 #include "cub_utils.h"
 #include "mem.h"
 #include "str.h"
-
-int	*copy_line(char *str, int len)
-{
-	int	i;
-	int	*row;
-
-	i = 0;
-	row = malloc(sizeof(int) * len);
-	while (i < len)
-	{
-		row[i] = str[i] - '0';
-		i++;
-	}
-	return (row);
-}
 
 t_img	new_img(int widht, int height, t_cub3d *data)
 {

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 14:04:29 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/08 13:52:17 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/10 19:13:27 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,6 @@
 #include "str.h"
 #include "swap.h"
 #include <stdio.h>
-
-bool	is_nbr(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (ft_isdigit(str[i]))
-			i++;
-		else
-			return (false);
-	}
-	return (true);
-}
 
 int	check_size(char **split)
 {
@@ -80,7 +65,7 @@ int	set_color_from_config(char *to_find, char **config, t_cub3d *data)
 	line = find_in_config(to_find, config);
 	if (!line)
 		exit_error("Missing rgb values in config file", data);
-	line += ft_strlen(to_find);
+	line = skip_whitespace(line + ft_strlen(to_find));
 	split = ft_split(line, ',');
 	if (!split)
 		exit_error("Failed to split rbg values", data);
@@ -98,7 +83,7 @@ t_img	init_texture_from_config(char *to_find, t_cub3d *data)
 	line = find_in_config(to_find, data->config);
 	if (!line)
 		exit_error("Missing texture from config file", data);
-	line += ft_strlen(to_find);
+	line = skip_whitespace(line + ft_strlen(to_find));
 	img.ptr = mlx_xpm_file_to_image(data->mlx, line, &img.w, &img.h);
 	if (!img.ptr)
 		exit_error("Loading texture from file", data);

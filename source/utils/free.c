@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 13:43:50 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/08 11:48:25 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/10 19:14:46 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,14 @@ int	free_cub3d(t_cub3d *data)
 	free_array(data->config);
 	ft_close(&data->fd);
 	return (1);
+}
+
+void	exit_error(char *error, t_cub3d *data)
+{
+	ft_putstr_fd("Error\n", 2);
+	ft_putstr_fd(error, 2);
+	ft_putstr_fd("\n", 2);
+	if (data)
+		free_cub3d(data);
+	exit(1);
 }

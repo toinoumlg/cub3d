@@ -6,37 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 10:35:10 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/08 13:24:13 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/10 14:27:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub_utils.h"
 #include "graphic.h"
 #include "struct.h"
-
-void	draw_lines_on_map(t_raycaster *rc, t_minimap *minimap,
-		t_double2 *player_pos)
-{
-	t_vector2	end;
-	t_vector2	start;
-
-	start = set_vector2(minimap->buffer.w / 2, minimap->buffer.h / 2);
-	end = get_hit_pos_on_minimap(rc, player_pos, minimap);
-	if (ft_abs(end.y - start.y) < ft_abs(end.x - start.x))
-	{
-		if (start.x > end.x)
-			plot_line_low(end, start, minimap);
-		else
-			plot_line_low(start, end, minimap);
-	}
-	else
-	{
-		if (start.y > end.y)
-			plot_line_high(end, start, minimap);
-		else
-			plot_line_high(start, end, minimap);
-	}
-}
 
 int	get_minimap_color(char **array, t_vector2 *coords, t_vector2 *size,
 		t_double2 *offset)

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 09:50:31 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/08 10:23:59 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/10 19:12:24 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,6 @@
 #include "str.h"
 #include <stdio.h>
 #include <string.h>
-
-int	map_line(char *line)
-{
-	int	i;
-
-	i = 0;
-	if (!line)
-		return (0);
-	while (line[i])
-	{
-		if (line[i] != ' ' && line[i] != '\t' && line[i] != '0'
-			&& line[i] != '1' && line[i] != 'N' && line[i] != 'E'
-			&& line[i] != 'S' && line[i] != 'W')
-			return (0);
-		i++;
-	}
-	return (1);
-}
 
 void	get_size(char **config, t_vector2 *size)
 {
@@ -56,18 +38,16 @@ void	copy_map_row(char *line, char *map_row, t_cub3d *data)
 	int	i;
 
 	i = 0;
+	if (!map_line(line))
+		exit_error("Invalid character in map", data);
 	while (*line)
 	{
-		if (*line == '\t')
-			i += 4;
-		else if (*line == '1' || *line == '0')
+		if (*line == '1' || *line == '0')
 			map_row[i++] = *line;
 		else if (*line == 'N' || *line == 'E' || *line == 'S' || *line == 'W')
 			map_row[i++] = *line;
-		else if (*line == ' ')
-			i++;
 		else
-			exit_error("Invalid character in map", data);
+			i++;
 		line++;
 	}
 }

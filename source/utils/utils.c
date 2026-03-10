@@ -6,23 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:31:34 by amalangu          #+#    #+#             */
-/*   Updated: 2026/01/13 17:32:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/10 19:11:27 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub_utils.h"
 #include "put.h"
 #include <stdlib.h>
-
-void	exit_error(char *error, t_cub3d *data)
-{
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(error, 2);
-	ft_putstr_fd("\n", 2);
-	if (data)
-		free_cub3d(data);
-	exit(1);
-}
 
 double	ft_abs(double nb)
 {
