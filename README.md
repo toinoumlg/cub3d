@@ -25,8 +25,7 @@ This project was developed by **mbah** and **amalangu**.
 - Minimap displaying nearby environment
 - Bonus features:
   - Minimap overlay
-  - Mouse-based camera rotation
-  - Platform-specific MLX handling
+  - Collision
 
 ---
 
@@ -93,7 +92,7 @@ cub3D/
 ├── maps/            # Test maps (valid and invalid)
 ├── textures/        # Wall textures
 ├── libft/           # Libft
-├── mlx/       # MiniLibX (macOS & Linux)
+├── mlx/             # MiniLibX (macOS & Linux)
 └── Makefile
 ````
 ## Resources

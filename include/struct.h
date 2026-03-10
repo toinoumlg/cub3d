@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 10:01:37 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/10 19:02:48 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/10 19:51:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #  define WINDOW_WIDTH 1920.0f
 #  define WINDOW_HEIGHT 1080.0f
 #  define WINDOW_NAME "cub3d"
-#  define FOV 70.0f
+#  define FOV 65.0f
 #  define MINI_MAP_SCALE 10
 # endif
 
