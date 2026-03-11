@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 13:49:19 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/10 19:48:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/11 12:18:49 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ static int	update(t_cub3d *data)
 	fps_counter(data);
 	return (0);
 }
-
 
 void	loop(t_cub3d *data)
 {

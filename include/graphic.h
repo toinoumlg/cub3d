@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:31:21 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/08 13:27:20 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/10 20:06:26 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #  define WHITE 0xFFFFFF
 #  define BLUE 0x0000FF
 #  define GREEN 0x00FF00
+#  define YELLOW 0xFFFF00
 # endif
 
 void		raycast(t_minimap *minimap, t_player *player, t_img *textures,
