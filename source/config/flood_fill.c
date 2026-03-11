@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 13:59:30 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/08 10:23:39 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/11 13:07:24 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	is_oob(char c)
 {
-	return (c == '\n' || c == ' ' || c == '\t' || c == '\n');
+	return (c == '\n' || c == ' ' || c == '\t' || c == '\n' || c == 0);
 }
 
 void	flood_fill(int x, int y, t_vector2 size, t_cub3d *data)

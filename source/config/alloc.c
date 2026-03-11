@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 16:50:30 by amalangu          #+#    #+#             */
-/*   Updated: 2026/03/08 11:37:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2026/03/11 13:09:09 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,5 @@ void	allocate_config(int size, t_cub3d *data)
 {
 	data->config = ft_calloc(sizeof(char *), (size + 1));
 	if (!data->config)
-		exit_error("Memory allocation failed.", NULL);
+		exit_error("Memory allocation failed.", data);
 }

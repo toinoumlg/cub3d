@@ -22,7 +22,7 @@ OBJECTS = $(SOURCES:$(SOURCE_DIR)/%.c=$(OBJECTS_DIR)/%.o)
 INCLUDES = -I/usr/include -I./mlx -I./libft/include -I./include
 MLX_LIB = $(MLX_DIR)/libmlx_Linux.a
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
-LIBS = -Lmlx -lmlx -L/usr/lib/X11 -lXext -lX11 -lpng -lm $(LIBFT_LIB)
+LIBS = $(MLX_LIB) -L/usr/lib/X11 -lXext -lX11 -lm $(LIBFT_LIB)
 DEP = $(OBJECTS:.o=.d)
 
 all: $(MLX_LIB) $(LIBFT_LIB) $(OBJECTS_DIR) $(NAME)
@@ -31,8 +31,8 @@ norminette:
 	clear
 	norminette $(SOURCE_DIR) $(INCLUDE_DIR)
 
-$(NAME): $(LIBFT_LIB) $(OBJECTS)
-	$(CC) $(CFLAGS) -o $(NAME) $(INCLUDES) $(OBJECTS) $(LIBS) 
+$(NAME): $(MLX_LIB) $(LIBFT_LIB) $(OBJECTS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJECTS) $(LIBS)
 
 $(MLX_LIB):
 	make -C $(MLX_DIR) $(FLUSH_BOTH)
