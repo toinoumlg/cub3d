@@ -2,4 +2,5 @@ build
 mlx/obj
 libft/build
 
+.idea
 *.a

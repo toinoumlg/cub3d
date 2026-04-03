@@ -1,6 +1,8 @@
-*This project has been created as part of the 42 curriculum by mbah and amalangu.*
-
 # cub3D
+
+## Preview
+
+![cub3D preview](preview.gif)
 
 ## Description
 
@@ -133,7 +135,3 @@ AI was **never used to generate complete source files**.
 
 ---
 
-## Author
-
-**mbah** and **amalangu** 
-42 Network – *Cub3D Project*
