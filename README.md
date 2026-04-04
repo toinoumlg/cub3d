@@ -12,8 +12,6 @@ The goal of the project is to create a simple 3D game engine using **raycasting*
 The engine renders a first-person view of the map, handles player movement and rotation, displays textured walls, and includes bonus features such as a minimap and mouse-based camera control.  
 The project also focuses heavily on **robust parsing**, **error handling**, and **memory safety**.
 
-This project was developed by **mbah** and **amalangu**.
-
 ---
 
 ## Features
